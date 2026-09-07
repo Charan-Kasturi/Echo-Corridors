@@ -1,0 +1,43 @@
+{
+  "trials": 400,
+  "rounds": 6,
+  "p_haz": 0.2,
+  "lethality": 0.85,
+  "false_positive": 0.04,
+  "fraction_of_rounds_with_forced_bridge_overlap": 0.18875,
+  "fraction_trials_bridge_truly_hazardous": 0.1525,
+  "final_round_bridge_metrics": {
+    "naive_union": {
+      "entropy_mean": 0.2901129043971525,
+      "brier_mean": 0.08809920495164333
+    },
+    "corrected_fusion": {
+      "entropy_mean": 0.25905483567589027,
+      "brier_mean": 0.07638304893198333
+    }
+  },
+  "final_round_map_metrics": {
+    "naive_union": {
+      "entropy_mean": 2.213180144988358,
+      "brier_mean": 0.0675776321220064
+    },
+    "corrected_fusion": {
+      "entropy_mean": 2.0726195329644854,
+      "brier_mean": 0.06339319814029273
+    }
+  },
+  "bridge_brier_conditioned_on_overlap_this_round": {
+    "naive_union": {
+      "overlap_rounds_mean": 0.08787254447668234,
+      "n_overlap_rounds": 453,
+      "no_overlap_rounds_mean": 0.12317491342117111,
+      "n_no_overlap_rounds": 1947
+    },
+    "corrected_fusion": {
+      "overlap_rounds_mean": 0.06195002192789761,
+      "n_overlap_rounds": 453,
+      "no_overlap_rounds_mean": 0.12230365619813778,
+      "n_no_overlap_rounds": 1947
+    }
+  }
+}

@@ -1,0 +1,111 @@
+{
+  "trials": 40,
+  "rounds": 45,
+  "p_haz": 0.15,
+  "lethality": 0.85,
+  "false_positive": 0.04,
+  "total_revisit_edge_visits_across_all_trials": 5400,
+  "avg_revisit_edge_visits_per_trial": 135.0,
+  "final_round_metrics": {
+    "weighted_average": {
+      "entropy_mean": 6.013731369543457,
+      "brier_mean": 0.13504396332348934,
+      "logloss_mean": 0.8030822230243715,
+      "recall_at_k_mean": 0.29779761904761903
+    },
+    "bn_paper_literal": {
+      "entropy_mean": 6.062098518251702,
+      "brier_mean": 0.12809155965000804,
+      "logloss_mean": 0.6913741295958161,
+      "recall_at_k_mean": 0.2019642857142857
+    },
+    "bn_exact": {
+      "entropy_mean": 6.391190024091939,
+      "brier_mean": 0.13279666661598108,
+      "logloss_mean": 0.4281903404114943,
+      "recall_at_k_mean": 0.27279761904761907
+    }
+  },
+  "worked_examples": [
+    {
+      "edge": 0,
+      "n_visits_this_round": 2,
+      "true_hazard": 0,
+      "destroyed_this_round": true,
+      "belief_before": {
+        "weighted_average": 0.15,
+        "bn_paper_literal": 0.15,
+        "bn_exact": 0.15
+      },
+      "belief_after": {
+        "weighted_average": 0.37389727847422466,
+        "bn_paper_literal": 0.28747294553779823,
+        "bn_exact": 0.28829816697471333
+      }
+    },
+    {
+      "edge": 0,
+      "n_visits_this_round": 2,
+      "true_hazard": 0,
+      "destroyed_this_round": true,
+      "belief_before": {
+        "weighted_average": 0.15,
+        "bn_paper_literal": 0.15,
+        "bn_exact": 0.15
+      },
+      "belief_after": {
+        "weighted_average": 0.37389727847422466,
+        "bn_paper_literal": 0.28747294553779823,
+        "bn_exact": 0.28829816697471333
+      }
+    },
+    {
+      "edge": 1,
+      "n_visits_this_round": 2,
+      "true_hazard": 0,
+      "destroyed_this_round": false,
+      "belief_before": {
+        "weighted_average": 0.15,
+        "bn_paper_literal": 0.15,
+        "bn_exact": 0.15
+      },
+      "belief_after": {
+        "weighted_average": 0.004289881599267862,
+        "bn_paper_literal": 0.0,
+        "bn_exact": 0.004289881599267862
+      }
+    },
+    {
+      "edge": 0,
+      "n_visits_this_round": 2,
+      "true_hazard": 1,
+      "destroyed_this_round": true,
+      "belief_before": {
+        "weighted_average": 0.15,
+        "bn_paper_literal": 0.15,
+        "bn_exact": 0.15
+      },
+      "belief_after": {
+        "weighted_average": 0.37389727847422466,
+        "bn_paper_literal": 0.28747294553779823,
+        "bn_exact": 0.28829816697471333
+      }
+    },
+    {
+      "edge": 1,
+      "n_visits_this_round": 2,
+      "true_hazard": 0,
+      "destroyed_this_round": false,
+      "belief_before": {
+        "weighted_average": 0.15,
+        "bn_paper_literal": 0.15,
+        "bn_exact": 0.15
+      },
+      "belief_after": {
+        "weighted_average": 0.004289881599267862,
+        "bn_paper_literal": 0.0,
+        "bn_exact": 0.004289881599267862
+      }
+    }
+  ]
+}
