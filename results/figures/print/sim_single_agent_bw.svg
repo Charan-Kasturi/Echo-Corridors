@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="580" viewBox="0 0 540 580" font-family="Georgia, serif">
+<rect width="540" height="580" fill="#ffffff"/>
+<line x1="105" y1="105" x2="215" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="105" x2="105" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="105" x2="325" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="105" x2="215" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="105" x2="435" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="215" x2="105" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="215" x2="435" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="215" x2="325" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="435" y1="215" x2="435" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="325" x2="215" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="325" x2="325" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="325" x2="215" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="325" x2="435" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="325" x2="325" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="435" x2="215" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="435" x2="325" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="435" x2="435" y2="435" stroke="#000" stroke-width="1.3"/>
+<path d="M 105.0,105.0 L 215.0,105.0 L 325.0,105.0 L 435.0,105.0 L 325.0,105.0 L 215.0,105.0 L 105.0,105.0" fill="none" stroke="#000" stroke-width="2.6" stroke-linecap="round" stroke-dasharray="8,4"/>
+<circle cx="105" cy="105" r="16" fill="#000" stroke="#000" stroke-width="2"/><text x="105" y="109" font-size="11" text-anchor="middle" fill="#fff" font-family="Georgia, serif">B</text>
+<circle cx="215" cy="105" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="105" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="105" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="435" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="105" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="215" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="215" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="435" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="105" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="435" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="435" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="105" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="435" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="435" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="435" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="435" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<text x="20" y="570" font-size="12" fill="#000">Dashed line = agent's planned round trip from base station B and back (planned round trip revisits a corridor (dead-end detour)). Thick corridors carry a planted hazard (not visible to the agent in advance).</text>
+</svg>

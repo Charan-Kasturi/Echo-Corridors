@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="540" height="540" viewBox="0 0 540 540" font-family="Georgia, serif">
+<rect width="540" height="540" fill="#ffffff"/>
+<line x1="105" y1="105" x2="215" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="105" x2="105" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="105" x2="325" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="105" x2="215" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="105" x2="435" y2="105" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="215" x2="105" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="215" x2="435" y2="215" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="215" x2="325" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="435" y1="215" x2="435" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="325" x2="215" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="325" x2="325" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="325" x2="215" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="325" x2="435" y2="325" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="325" x2="325" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="105" y1="435" x2="215" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="215" y1="435" x2="325" y2="435" stroke="#000" stroke-width="1.3"/>
+<line x1="325" y1="435" x2="435" y2="435" stroke="#000" stroke-width="1.3"/>
+<circle cx="105" cy="105" r="15" fill="#000" stroke="#000" stroke-width="2"/><text x="105" y="109" font-size="11" text-anchor="middle" fill="#fff" font-family="Georgia, serif">B</text>
+<circle cx="215" cy="105" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="105" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="105" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="435" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="105" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="215" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="215" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="215" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="435" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="105" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="325" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="435" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="435" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="105" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="435" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="215" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="435" r="6" fill="#fff" stroke="#888" stroke-width="2"/><text x="325" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="435" r="8" fill="#fff" stroke="#000" stroke-width="2"/><text x="435" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="30" cy="500" r="7" fill="#000" stroke="#000"/><text x="45" y="504" font-size="12">base station</text>
+<circle cx="30" cy="520" r="7" fill="#fff" stroke="#000"/><text x="45" y="524" font-size="12">dead-end room</text>
+<line x1="180" y1="500" x2="215" y2="500" stroke="#000" stroke-width="4.5"/><text x="222" y="504" font-size="12">true hazard on corridor (thick line)</text>
+</svg>

@@ -15,6 +15,11 @@ is served as a normal <img>, and animated SVG plays inside an <img> tag in
 every major engine), so it gives the same "watch it move" result without
 adding a binary asset format and a hand-rolled codec. The static topology
 diagrams (make_diagrams.py) remain as a non-animated fallback.
+
+Each scene function also takes a `bw` flag for the print report: a static
+(non-animated -- a printed page cannot play SMIL), strictly black-and-white
+rendering with the two routes told apart by dash pattern instead of colour,
+and no baked-in title (the print layout supplies its own numbered caption).
 """
 import random
 
@@ -24,9 +29,10 @@ AGENT_BLUE = "#2C6E9B"
 AGENT_ORANGE = "#C1553B"
 
 
-def node_circle(x, y, label, r=16, fill="#eef3f7", stroke="#2C6E9B"):
+def node_circle(x, y, label, r=16, fill="#eef3f7", stroke="#2C6E9B", text_fill="#000"):
     return (f'<circle cx="{x}" cy="{y}" r="{r}" fill="{fill}" stroke="{stroke}" stroke-width="2"/>'
-            f'<text x="{x}" y="{y+4}" font-size="11" text-anchor="middle" font-family="Georgia, serif">{label}</text>')
+            f'<text x="{x}" y="{y+4}" font-size="11" text-anchor="middle" fill="{text_fill}" '
+            f'font-family="Georgia, serif">{label}</text>')
 
 
 def edge_line(x1, y1, x2, y2, color="#ccc", width=2.5):
@@ -77,7 +83,19 @@ def traced_route(seq, pos, color, dur, width=4):
     )
 
 
-def single_agent_animation(path, seed=20260906, p_haz=0.15, dur=7):
+def static_route(seq, pos, width=4, dash=None):
+    """Non-animated black route line for the print report. Where two
+    routes coincide (e.g. both agents' paths on a shared bridge edge) they
+    are deliberately drawn on top of each other -- that overlap is the
+    point of the figure -- and told apart by dash pattern, not offset."""
+    pts = [pos[n] for n in seq]
+    d = "M " + " L ".join(f"{x:.1f},{y:.1f}" for x, y in pts)
+    dash_attr = f' stroke-dasharray="{dash}"' if dash else ""
+    return (f'<path d="{d}" fill="none" stroke="#000" stroke-width="{width}" '
+            f'stroke-linecap="round"{dash_attr}/>')
+
+
+def single_agent_animation(path, seed=20260906, p_haz=0.15, dur=7, bw=False):
     rng = random.Random(seed)
     g = environment.generate_random_facility(rng, rows=4, cols=4, prune_prob=0.35, min_dead_ends=2)
     truth = environment.assign_hazards(g, rng, p_haz)
@@ -102,36 +120,51 @@ def single_agent_animation(path, seed=20260906, p_haz=0.15, dur=7):
              f'<rect width="{W}" height="{H+40}" fill="#ffffff"/>']
     for eid, (u, v) in g.edges.items():
         x1, y1 = pos[u]; x2, y2 = pos[v]
-        color = "#C1553B" if truth[eid] == 1 else "#ddd"
-        parts.append(edge_line(x1, y1, x2, y2, color, 4 if truth[eid] == 1 else 2.5))
+        if bw:
+            color, width = "#000", (4.5 if truth[eid] == 1 else 1.3)
+        else:
+            color = "#C1553B" if truth[eid] == 1 else "#ddd"
+            width = 4 if truth[eid] == 1 else 2.5
+        parts.append(edge_line(x1, y1, x2, y2, color, width))
 
-    parts.append(traced_route(node_seq, pos, AGENT_BLUE, dur))
+    if bw:
+        parts.append(static_route(node_seq, pos, width=2.6, dash="8,4"))
+    else:
+        parts.append(traced_route(node_seq, pos, AGENT_BLUE, dur))
 
     for n in g.nodes:
         x, y = pos[n]
         if n == g.base:
-            parts.append(node_circle(x, y, "B", fill=AGENT_BLUE, stroke="#123"))
+            fill, stroke, tf = ("#000", "#000", "#fff") if bw else (AGENT_BLUE, "#123", "#000")
+            parts.append(node_circle(x, y, "B", fill=fill, stroke=stroke, text_fill=tf))
         elif n in g.dead_ends():
-            parts.append(node_circle(x, y, "", fill="#fff3e0", stroke="#B08B2D", r=8))
+            fill, stroke = ("#fff", "#000") if bw else ("#fff3e0", "#B08B2D")
+            parts.append(node_circle(x, y, "", fill=fill, stroke=stroke, r=8))
         else:
-            parts.append(node_circle(x, y, "", fill="#eef3f7", stroke="#999", r=6))
+            fill, stroke = ("#fff", "#888") if bw else ("#eef3f7", "#999")
+            parts.append(node_circle(x, y, "", fill=fill, stroke=stroke, r=6))
 
-    parts.append(moving_dot(node_seq, pos, AGENT_BLUE, dur, "agent"))
+    if not bw:
+        parts.append(moving_dot(node_seq, pos, AGENT_BLUE, dur, "agent"))
 
     caption = ("planned round trip revisits a corridor (dead-end detour)" if revisited
                else "planned round trip -- no revisit needed this round")
-    parts.append(f'<text x="20" y="24" font-size="16" font-weight="bold">'
-                  f'One simulated round trip on a random facility ({caption})</text>')
-    parts.append(f'<text x="20" y="{H+30}" font-size="12" fill="#555">'
-                  f'Blue dot = agent following its planned round trip from base station B and back. '
-                  f'Red corridors carry a planted hazard (not visible to the agent in advance).</text>')
+    if not bw:
+        parts.append(f'<text x="20" y="24" font-size="16" font-weight="bold">'
+                      f'One simulated round trip on a random facility ({caption})</text>')
+    note_color = "#000" if bw else "#555"
+    dashed_note = "Dashed line = " if bw else "Blue dot = "
+    parts.append(f'<text x="20" y="{H+30}" font-size="12" fill="{note_color}">'
+                  f'{dashed_note}agent\'s planned round trip from base station B and back '
+                  f'({caption}). {"Thick" if bw else "Red"} corridors carry a planted hazard '
+                  f'(not visible to the agent in advance).</text>')
     parts.append('</svg>')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(parts))
     return revisited
 
 
-def bottleneck_animation(path, dur=8):
+def bottleneck_animation(path, dur=8, bw=False):
     g = environment.generate_bottleneck_facility()
     pos = {
         "baseA": (80, 90), "a1": (190, 90), "a2": (300, 90),
@@ -160,36 +193,56 @@ def bottleneck_animation(path, dur=8):
     ]
     parts = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}" '
              f'font-family="Georgia, serif">', f'<rect width="{W}" height="{H}" fill="#ffffff"/>']
+    edge_c = "#000" if bw else "#ddd"
+    bridge_c = "#000" if bw else "#e7b8ac"
     for u, v in static_edges:
         x1, y1 = pos[u]; x2, y2 = pos[v]
-        parts.append(edge_line(x1, y1, x2, y2, "#ddd", 2.5))
+        parts.append(edge_line(x1, y1, x2, y2, edge_c, 1.3 if bw else 2.5))
     bx1, by1 = pos["P"]; bx2, by2 = pos["Q"]
-    parts.append(edge_line(bx1, by1, bx2, by2, "#e7b8ac", 6))
+    parts.append(edge_line(bx1, by1, bx2, by2, bridge_c, 6))
 
-    parts.append(traced_route(seq_a, pos, AGENT_BLUE, dur))
-    parts.append(traced_route(seq_b, pos, AGENT_ORANGE, dur))
+    if bw:
+        # deliberately NOT offset apart: where the two solid/dashed lines
+        # coincide is exactly the shared bridge edge both agents use, which
+        # is the point of the figure.
+        parts.append(static_route(seq_a, pos, width=3.2, dash=None))
+        parts.append(static_route(seq_b, pos, width=2.0, dash="7,4"))
+    else:
+        parts.append(traced_route(seq_a, pos, AGENT_BLUE, dur))
+        parts.append(traced_route(seq_b, pos, AGENT_ORANGE, dur))
 
     for n, (x, y) in pos.items():
         if n == "baseA":
-            parts.append(node_circle(x, y, "A", fill=AGENT_BLUE, stroke="#123"))
+            fill, stroke = ("#000", "#000") if bw else (AGENT_BLUE, "#123")
+            parts.append(node_circle(x, y, "A", fill=fill, stroke=stroke,
+                                      text_fill="#fff" if bw else "#000"))
         elif n == "baseB":
-            parts.append(node_circle(x, y, "B", fill=AGENT_ORANGE, stroke="#321"))
+            fill, stroke = ("#fff", "#000") if bw else (AGENT_ORANGE, "#321")
+            parts.append(node_circle(x, y, "B", fill=fill, stroke=stroke,
+                                      text_fill="#000"))
         elif n in ("P", "Q"):
-            parts.append(node_circle(x, y, n, fill="#fff", stroke="#C1553B", r=14))
+            stroke = "#000" if bw else "#C1553B"
+            parts.append(node_circle(x, y, n, fill="#fff", stroke=stroke, r=14))
         else:
-            parts.append(node_circle(x, y, "", fill="#eef3f7", stroke="#999", r=6))
+            fill, stroke = ("#fff", "#888") if bw else ("#eef3f7", "#999")
+            parts.append(node_circle(x, y, "", fill=fill, stroke=stroke, r=6))
 
-    parts.append(moving_dot(seq_a, pos, AGENT_BLUE, dur, "agent A"))
-    parts.append(moving_dot(seq_b, pos, AGENT_ORANGE, dur, "agent B"))
+    if not bw:
+        parts.append(moving_dot(seq_a, pos, AGENT_BLUE, dur, "agent A"))
+        parts.append(moving_dot(seq_b, pos, AGENT_ORANGE, dur, "agent B"))
 
-    parts.append('<text x="20" y="24" font-size="16" font-weight="bold">'
-                 'Later round, both wings already searched: both agents converge on the shared bridge</text>')
+    if not bw:
+        parts.append('<text x="20" y="24" font-size="16" font-weight="bold">'
+                     'Later round, both wings already searched: both agents converge on the shared bridge</text>')
     note = ("both agents' planned routes use the shared bridge edge this round"
             if both_used_bridge else
             "in this particular round only one agent used the shared bridge")
-    parts.append(f'<text x="20" y="{H-16}" font-size="12" fill="#555">'
-                  f'Blue = agent A (wing A), orange = agent B (wing B); {note}. '
-                  f'The thick pink edge (P-Q) is the sole route to the valley for both wings.</text>')
+    note_color = "#000" if bw else "#555"
+    legend = ("Solid line = agent A (wing A), dashed line = agent B (wing B)" if bw
+              else "Blue = agent A (wing A), orange = agent B (wing B)")
+    parts.append(f'<text x="20" y="{H-16}" font-size="12" fill="{note_color}">'
+                  f'{legend}; {note}. '
+                  f'The thick edge (P-Q) is the sole route to the valley for both wings.</text>')
     parts.append('</svg>')
     with open(path, "w", encoding="utf-8") as f:
         f.write("\n".join(parts))
@@ -197,7 +250,11 @@ def bottleneck_animation(path, dur=8):
 
 
 if __name__ == "__main__":
+    import os
     revisited = single_agent_animation("results/figures/sim_single_agent.svg")
     overlap = bottleneck_animation("results/figures/sim_bottleneck.svg")
+    os.makedirs("results/figures/print", exist_ok=True)
+    single_agent_animation("results/figures/print/sim_single_agent_bw.svg", bw=True)
+    bottleneck_animation("results/figures/print/sim_bottleneck_bw.svg", bw=True)
     print("single-agent example revisits a corridor:", revisited)
     print("bottleneck example: both agents share the bridge this round:", overlap)

@@ -1,0 +1,762 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Echo Corridors - project report</title>
+<style>
+  @page {
+    size: Letter;
+    margin: 1.1in 1.15in;
+    @bottom-center { content: counter(page); font-family: 'Times New Roman', Times, serif; font-size: 9.5pt; color: #000; }
+  }
+  * { box-sizing: border-box; }
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    color: #000;
+    line-height: 1.5;
+    font-size: 11.5pt;
+    max-width: 6.2in;
+    margin: 0 auto;
+  }
+  h1, h2, h3, h4 { font-family: 'Times New Roman', Times, serif; color: #000; font-weight: bold; }
+
+  .cover { text-align: center; padding-top: 1.9in; page-break-after: always; }
+  .cover .kicker { font-size: 10pt; letter-spacing: 0.15em; text-transform: uppercase; color: #000; margin-bottom: 40px; }
+  .cover h1 { font-size: 24pt; margin-bottom: 8px; letter-spacing: 0.01em; }
+  .cover .subtitle { font-size: 13pt; font-style: italic; color: #000; margin-bottom: 70px; }
+  .cover hr { width: 1.6in; margin: 0 auto 26px auto; border: none; border-top: 1px solid #000; }
+  .cover .author { font-size: 12pt; margin-bottom: 4px; }
+  .cover .date { font-size: 10.5pt; color: #000; margin-bottom: 90px; }
+  .cover .abstract { font-size: 9.8pt; color: #000; line-height: 1.7; text-align: left; max-width: 4.6in; margin: 0 auto; }
+  .cover .abstract .abstract-label { font-weight: bold; font-size: 9.5pt; letter-spacing: 0.08em; text-transform: uppercase; display: block; margin-bottom: 6px; text-align: center; }
+
+  .toc { page-break-after: always; }
+  .toc h2 { border-bottom: 1px solid #000; }
+  .toc ol { list-style: none; padding-left: 0; margin: 20px 0; counter-reset: sec; }
+  .toc > ol > li { counter-increment: sec; margin-bottom: 9px; font-size: 11pt; }
+  .toc > ol > li::before { content: counter(sec) ".\0000a0\0000a0"; font-weight: bold; }
+  .toc ol ol { counter-reset: subsec; margin: 3px 0 0 0; }
+  .toc ol ol li { counter-increment: subsec; font-size: 10.3pt; color: #000; margin-bottom: 2px; }
+  .toc ol ol li::before { content: counter(sec) "." counter(subsec) "\0000a0\0000a0"; font-weight: normal; }
+  .toc .dots { border-bottom: 1px dotted #666; flex: 1; margin: 0 5px; }
+  .toc-line { display: flex; align-items: baseline; }
+
+  h2 {
+    font-size: 15pt; margin-top: 0; margin-bottom: 16px; padding-bottom: 4px;
+    border-bottom: 1px solid #000; page-break-after: avoid;
+  }
+  h3 { font-size: 12.5pt; margin-top: 22px; margin-bottom: 8px; page-break-after: avoid; }
+  h4 { font-size: 11.5pt; margin-top: 14px; margin-bottom: 5px; page-break-after: avoid; font-style: italic; font-weight: bold; }
+  p { margin: 0 0 11px 0; orphans: 3; widows: 3; text-align: justify; }
+  .section { page-break-before: always; }
+
+  .finding {
+    margin: 16px 0; padding: 10px 0; border-top: 1px solid #000; border-bottom: 1px solid #000;
+    font-size: 11pt; page-break-inside: avoid;
+  }
+  .finding .finding-title { font-weight: bold; font-size: 10.5pt; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 8px; }
+
+  table {
+    width: 100%; border-collapse: collapse; margin: 6px 0 4px 0; font-size: 10pt;
+    font-family: 'Times New Roman', Times, serif;
+  }
+  th, td { padding: 4px 8px; text-align: right; border: none; }
+  th:first-child, td:first-child { text-align: left; }
+  tr:first-child th { border-top: 1.3px solid #000; border-bottom: 1px solid #000; font-weight: bold; padding-top: 5px; padding-bottom: 5px; }
+  tr:last-child td { border-bottom: 1.3px solid #000; padding-bottom: 6px; }
+  .table-label {
+    font-size: 10pt; font-weight: bold; text-align: left; margin-top: 14px; margin-bottom: 3px;
+  }
+  .table-note { font-size: 9pt; font-style: italic; color: #000; margin-top: 2px; margin-bottom: 14px; }
+
+  img { max-width: 100%; display: block; margin: 10px auto; }
+  .fig-caption {
+    font-size: 9.8pt; color: #000; text-align: center; margin-top: 2px; margin-bottom: 18px; padding: 0 0.3in;
+  }
+  .fig-caption b { font-weight: bold; }
+
+  svg { display: block; margin: 14px auto; max-width: 100%; }
+  .diagram-wrap { page-break-inside: avoid; }
+
+  code { font-family: Consolas, monospace; font-size: 0.88em; }
+  ul, ol.plain { margin: 8px 0 14px 0; padding-left: 24px; }
+  li { margin-bottom: 4px; text-align: justify; }
+  .eq { text-align: center; font-family: Consolas, monospace; font-size: 0.9em; margin: 10px 0 14px 0; }
+  footer {
+    margin-top: 34px; padding-top: 8px; border-top: 1px solid #000; font-size: 9pt;
+    font-style: italic; color: #000;
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ COVER ============ -->
+<div class="cover">
+  <div class="kicker">Project Report</div>
+  <h1>Echo Corridors</h1>
+  <div class="subtitle">Bayesian Networks for Path-Based Sensors<br>on Graph-Shaped Environments</div>
+  <hr>
+  <div class="author">Charan Kasturi</div>
+  <div class="date">September 2026</div>
+  <div class="abstract">
+    <span class="abstract-label">Abstract</span>
+    This report documents an independent, from-scratch implementation of the path-based sensor
+    Bayesian network of Srivastava, Kontoudis, Sofge and Otte (2026), which fuses boolean
+    "did the agent return" observations from expendable path-following agents into a spatial
+    hazard belief map and plans routes to maximize expected information gain. Rather than
+    reproduce the reference paper's own evaluation environment - an open, cycle-rich 15&times;15
+    continuous grid - every experiment here runs on a new environment, Echo Corridors: graph-shaped
+    corridor networks with dead-end rooms and topological bottlenecks, meant to resemble collapsed
+    buildings, tunnels and single-access road networks. That change in environment surfaces two
+    structural gaps in the reference method that its own open-grid experiments cannot trigger. First,
+    the paper's own prescription for a path that revisits a cell is mathematically under-specified,
+    and the natural reading of it is measurably less accurate than a corrected closed form derived
+    here (log loss against ground truth roughly 1.6&times; worse over 45 rounds). Second, the
+    multi-robot algorithm assumes a disjoint search-region partition always exists so that per-agent
+    local updates can be merged by a plain set union; on a graph with a genuine cut edge this
+    assumption is false, and the algorithm's specified merge step silently discards one agent's
+    observation of the shared edge, measurably degrading accuracy in the rounds where two agents are
+    forced to share it. A third, cross-cutting observation runs through both: the reference paper's
+    sole convergence metric, Shannon entropy, cannot distinguish a correctly converged belief map
+    from a confidently wrong one, which is exactly why neither gap is visible in its own reported
+    figures. A fourth stress test, on sensor-reliability misspecification, is reported as an honest,
+    inconclusive negative result rather than adjusted to fit a cleaner narrative. Every figure and
+    number in this document is reproducible from the committed repository.
+  </div>
+</div>
+
+<!-- ============ TABLE OF CONTENTS ============ -->
+<div class="toc">
+<h2>Contents</h2>
+<ol>
+  <li><div class="toc-line">Introduction<span class="dots"></span></div></li>
+  <li><div class="toc-line">The Method<span class="dots"></span></div>
+    <ol>
+      <li><div class="toc-line">The Bayesian Network Formulation<span class="dots"></span></div></li>
+      <li><div class="toc-line">The Weighted-Average Baseline<span class="dots"></span></div></li>
+      <li><div class="toc-line">The Corrected Closed Form for Repeated Visits<span class="dots"></span></div></li>
+      <li><div class="toc-line">Practical Additions Beyond the Paper<span class="dots"></span></div></li>
+    </ol>
+  </li>
+  <li><div class="toc-line">The Echo Corridors Environments<span class="dots"></span></div>
+    <ol>
+      <li><div class="toc-line">Random Facility (Single-Agent Revisit Study)<span class="dots"></span></div></li>
+      <li><div class="toc-line">Bottleneck Facility (Multi-Agent Overlap Study)<span class="dots"></span></div></li>
+      <li><div class="toc-line">Watching a Round Happen<span class="dots"></span></div></li>
+    </ol>
+  </li>
+  <li><div class="toc-line">Implementation<span class="dots"></span></div>
+    <ol>
+      <li><div class="toc-line">Module Overview<span class="dots"></span></div></li>
+      <li><div class="toc-line">Controlling for Confounds<span class="dots"></span></div></li>
+    </ol>
+  </li>
+  <li><div class="toc-line">Experimental Setup<span class="dots"></span></div>
+    <ol>
+      <li><div class="toc-line">Monte Carlo Parameters<span class="dots"></span></div></li>
+      <li><div class="toc-line">Metrics<span class="dots"></span></div></li>
+    </ol>
+  </li>
+  <li><div class="toc-line">Results<span class="dots"></span></div>
+    <ol>
+      <li><div class="toc-line">Revisit Handling<span class="dots"></span></div></li>
+      <li><div class="toc-line">Multi-Agent Overlap on a Bottleneck<span class="dots"></span></div></li>
+      <li><div class="toc-line">Entropy Is Not a Correctness Metric<span class="dots"></span></div></li>
+      <li><div class="toc-line">Sensor-Rate Misspecification<span class="dots"></span></div></li>
+    </ol>
+  </li>
+  <li><div class="toc-line">Findings<span class="dots"></span></div></li>
+  <li><div class="toc-line">Relation to Cited Follow-Up Work<span class="dots"></span></div></li>
+  <li><div class="toc-line">Limitations and Future Scope<span class="dots"></span></div></li>
+  <li><div class="toc-line">Reproducibility<span class="dots"></span></div></li>
+</ol>
+</div>
+
+<!-- ============ 1. INTRODUCTION ============ -->
+<div class="section">
+<h2><span class="sec-num">1.</span> Introduction</h2>
+
+<p>A "path-based sensor" produces a single observation for an entire traversed route rather than
+a measurement at a point. An expendable agent is sent along a path through a hazardous,
+communication-denied environment; if it returns, the sensor reads 0 (no hazard triggered
+anywhere on the path); if it does not, the sensor reads 1 (something happened, but not where).
+Fusing many such observations into a spatial hazard belief map, and choosing routes that gather
+information fastest, is the problem this report is about.</p>
+
+<p>Srivastava, Kontoudis, Sofge and Otte introduce a Bayesian network formulation of this fusion
+step, replacing an earlier weighted-average heuristic used in prior work by the same group. The
+network models hazard existence, per-cell destruction and the resulting sensor trigger as a
+small directed acyclic graph, and derives closed-form posterior updates for a path that visits
+each cell at most once. Reported experiments, run on an open 15&times;15 continuous grid, show
+faster entropy convergence and fewer destroyed agents than the older method, for both
+single-agent and parallel multi-agent deployment.</p>
+
+<p>This report documents an independent re-implementation of that method, and evaluates it on a
+deliberately different environment: graph-shaped corridor networks with dead ends and
+topological bottlenecks, meant to resemble collapsed buildings, tunnels and single-access road
+networks rather than open terrain. The choice is not cosmetic. Two of the three confirmed
+findings below exist only because the environment has a graph topology, and are structurally
+invisible on a continuous, cycle-rich grid. It contains:</p>
+
+<ol class="plain">
+<li>a Bayesian-network inference engine implementing three belief-update rules - the reference
+paper's method, the pre-existing weighted-average baseline it replaces, and a corrected closed
+form for paths that revisit a cell (<code>src/inference.py</code>);</li>
+<li>a greedy expected-information-gain round-trip path planner over an arbitrary graph
+(<code>src/planner.py</code>);</li>
+<li>two graph environments - a randomly pruned floor plan with dead ends, and a fixed two-wing
+facility sharing one bottleneck corridor (<code>src/environment.py</code>);</li>
+<li>a metrics module scoring belief maps against planted ground truth, not only by entropy
+(<code>src/metrics.py</code>);</li>
+<li>three Monte Carlo experiments and the figures and tables in this report, all regenerated
+from the committed scripts.</li>
+</ol>
+
+<p>Sections 2 through 5 cover the method, the environments, the code, and the experimental
+setup. Section 6 reports results, including a stress test that came back inconclusive and is
+reported as such. Section 7 collects three confirmed gaps and one open question into standalone
+findings, and the remaining sections place this work against the paper's own cited follow-ups
+and list what it does not attempt.</p>
+</div>
+
+<!-- ============ 2. THE METHOD ============ -->
+<div class="section">
+<h2><span class="sec-num">2.</span> The Method</h2>
+
+<h3><span class="sec-num">2.1</span> The Bayesian Network Formulation</h3>
+<p>Hazard existence per cell <code>Z</code>, per-cell destruction <code>Delta</code>, and the
+path-level sensor trigger <code>Theta</code> form a three-layer Bayesian network: an
+<i>estimation</i> layer (<code>Z</code>, the belief being maintained), an <i>inference</i> layer
+(<code>Delta</code>, whether the agent was destroyed at each cell), and an <i>observation</i>
+layer (<code>Theta</code>, the one bit actually seen). Given a survived path
+(<code>Theta = 0</code>), the posterior for a visited cell follows the reference paper's Eq.
+(7):</p>
+<div class="eq">P(Z_k=1 | Delta_k=0) = P(Delta_k=0 | Z_k=1) &middot; P(Z_k=1) / P(Delta_k=0)</div>
+<p>and given a triggered path (<code>Theta = 1</code>), the posterior for a given cell follows
+Eqs. (5)-(6), computed by eliminating the other cells on the path. Both are stated only for a
+path that visits each cell at most once.</p>
+
+<h3><span class="sec-num">2.2</span> The Weighted-Average Baseline</h3>
+<p>The method the reference paper replaces (Otte &amp; Sofge, 2021 [18]; Srivastava et al., 2022
+[26]) computes, for a triggered path, the posterior belief map under each mutually exclusive
+"destroyed at cell <code>k</code>" history separately, then combines the <code>ell</code>
+histories weighted by their relative likelihood:</p>
+<div class="eq">P(Z) = &sum;<sub>k=1..ell</sub> P(Z | Z_prior, Delta_k=1) &middot; P(Delta_k=1)</div>
+<p>Both this and the Bayesian-network method above are implemented here exactly as published, so
+that the reported comparisons isolate the belief-update rule itself, not a re-derivation of
+either.</p>
+
+<h3><span class="sec-num">2.3</span> The Corrected Closed Form for Repeated Visits</h3>
+<p>The reference paper's Remark 1 concedes that an agent may revisit a cell, and states only that
+"the new likelihood <code>P(Theta|Delta)</code> is calculated by summing the probability of each
+instance" - no formula is given, and the claim is not checked against the rest of the
+derivation. We derive one. Let a round-trip path visit distinct cells <code>e = 1..m</code>,
+with cell <code>e</code> visited <code>n_e</code> times. Conditioned on hazard state
+<code>z_e</code>, each individual visit is an independent Bernoulli survival trial with
+probability <code>a_e = 1 - L</code> (lethality <code>L</code>) if <code>z_e = 1</code>, or
+<code>b_e = 1 - fp</code> (false-positive rate <code>fp</code>) if <code>z_e = 0</code>.
+Surviving all <code>n_e</code> visits to <code>e</code> therefore has probability
+<code>a_e&#94;n_e</code> or <code>b_e&#94;n_e</code>. Because the agent is destroyed on first
+failure and does not continue, the observed <code>Theta</code> is a deterministic function of
+whether <i>any</i> visit, anywhere on the path, failed:</p>
+<div class="eq">P(Theta=0 | z) = &prod;<sub>e</sub> ( a_e&#94;n_e &nbsp;if z_e=1&nbsp; else &nbsp;b_e&#94;n_e )</div>
+<p>Marginalising over the independent priors <code>q_e</code> gives a per-cell survival marginal
+<code>s_e = q_e&middot;a_e&#94;n_e + (1-q_e)&middot;b_e&#94;n_e</code>, and Bayes' rule gives, for
+a survived path:</p>
+<div class="eq">P(z_e=1 | Theta=0) = q_e &middot; a_e&#94;n_e / s_e &nbsp;&nbsp;&nbsp; (*)</div>
+<p>and, for a destroyed path, with <code>S = &prod;_i s_i</code> over all distinct cells on the
+path:</p>
+<div class="eq">P(z_e=1 | Theta=1) = q_e &middot; (1 &minus; a_e&#94;n_e&middot;S/s_e) / (1 &minus; S) &nbsp;&nbsp;&nbsp; (**)</div>
+<p>Both reduce exactly to the reference paper's Eqs. (7) and (5)-(6) when <code>n_e = 1</code>
+for every cell. A notable, easily overlooked property of (*) and (**): they depend on the path
+only through each cell's <i>visit count</i>, not the order in which cells were visited - "a
+failure happened somewhere" is a symmetric function of the underlying independent per-visit
+outcomes, so a correct implementation needs only to <i>count</i> visits correctly, which the
+paper's own Remark 1 language does not do (Section 6.1 shows what its literal reading produces
+instead).</p>
+
+<h3><span class="sec-num">2.4</span> Practical Additions Beyond the Paper</h3>
+<p>Four details are needed to run the method on a graph and are kept explicit here so a reader
+can see which parts are the reference method and which are this project's engineering.</p>
+
+<table>
+<tr><th>Addition</th><th>What it does</th></tr>
+<tr><td>Round-trip planner</td><td>Enumerates "there-and-back" routes (out along a simple path,
+back the same way - forces a revisit) and "loop" routes (out and back by edge-disjoint simple
+paths, when the graph offers one), and scores every candidate by exact expected information gain
+using formula (*)/(**) above.</td></tr>
+<tr><td>Shared planning trajectory</td><td>In every experiment, one canonical belief map decides
+which paths get walked and what happens on them; every compared update rule then replays that
+identical sequence of observations. This isolates each comparison to the update rule, not to
+different rules exploring different parts of the map.</td></tr>
+<tr><td><code>bn_paper_literal</code></td><td>A best-effort literal reading of Remark 1: a cell
+visited <code>n</code> times contributes <code>n</code> times its single-visit destruction
+probability (capped at 1), an additive approximation rather than the correct compounding of
+survival probabilities in (*)/(**).</td></tr>
+<tr><td>Ground-truth scoring</td><td>Every belief map is scored against the actual planted
+hazard map by Brier score, log loss and recall@k, in addition to entropy - see
+Section 5.2.</td></tr>
+</table>
+</div>
+
+<!-- ============ 3. ENVIRONMENTS ============ -->
+<div class="section">
+<h2><span class="sec-num">3.</span> The Echo Corridors Environments</h2>
+
+<p>The reference paper's own experiments use an open 15&times;15 grid with 8-connected movement
+in unobstructed 2D space. That choice has two consequences that happen to make both structural
+gaps in this report invisible. First, revisits never arise: in a grid with no walls, a path that
+would need to retrace a cell can almost always be rerouted through a neighbouring cell instead,
+so a round trip - which the paper's own Problem 1 formulation requires, "agents start and end
+their search rounds at their designated base stations" - is trivial to make revisit-free.
+Second, disjoint search-region partitions always exist: an entropy-weighted Voronoi diagram over
+a continuous, simply-connected 2D region can always be drawn so every point belongs to exactly
+one agent's region, by construction. A graph need not have either property, and surfacing what
+happens when it does not is the reason this report uses graph environments instead of a grid.</p>
+
+<h3><span class="sec-num">3.1</span> Random Facility (Single-Agent Revisit Study)</h3>
+<p>A 4&times;4 grid of rooms (16 nodes) starts fully connected (up to 24 candidate corridors),
+then corridors are randomly deleted (deletion probability 0.35) subject to two constraints: the
+floor plan must stay connected, and at least two dead-end rooms must remain. Across the 40
+generated instances used in Section 6.1, the resulting floor plans averaged 16.7 corridors and
+4.4 dead-end rooms (range 2-7). Ground-truth hazards are planted independently on each corridor
+with probability 0.15, matching the reference paper's cell-independence assumption.</p>
+
+<div class="diagram-wrap">
+<img src="../results/figures/print/sample_facility_bw.svg" alt="sample random facility diagram">
+</div>
+<p class="fig-caption"><b>Figure 1.</b> A generated instance. Thin lines are corridors, thick
+lines carry a planted hazard; the filled node is the base station; open, larger nodes are dead
+ends the agent can reach only by using one corridor twice on any round trip.</p>
+
+<h3><span class="sec-num">3.2</span> Bottleneck Facility (Multi-Agent Overlap Study)</h3>
+<p>A fixed, hand-designed 11-node facility: two independent wings (three rooms each, with their
+own base stations), a shared junction, one bridge corridor, and a three-room "valley" beyond the
+bridge that is, every round, the most information-rich unexplored part of the map.</p>
+
+<div class="diagram-wrap">
+<img src="../results/figures/print/bottleneck_topology_bw.svg" alt="bottleneck facility diagram">
+</div>
+<p class="fig-caption"><b>Figure 2.</b> Both wings' only route to the valley is the single
+marked bridge edge. This is deliberately the simplest possible graph exhibiting the structural
+problem in Section 6.2: not a rare or contrived layout, but the minimal shape of "two facilities
+sharing one access route to a place both need to search."</p>
+
+<h3><span class="sec-num">3.3</span> Watching a Round Happen</h3>
+<p>The committed HTML version of this report (<code>report/echo_corridors_report.html</code>,
+opened in a browser rather than printed) embeds two looping SVG animations replaying one
+representative simulated round each - a colour reproduction of Figures 3 and 4 below with a
+moving agent marker rather than a single static route. They are SVG rather than GIF because the
+project has no imaging-library dependency to encode one; see
+<code>make_animation.py</code> for the reasoning. The static routes below are the print-safe
+equivalent.</p>
+
+<div class="diagram-wrap">
+<img src="../results/figures/sim_single_agent.svg" alt="single agent round trip, animated">
+<img src="../results/figures/sim_bottleneck.svg" alt="two agent bottleneck round, animated">
+</div>
+<p class="fig-caption">Live, looping colour replays (visible when this HTML file is opened in a
+browser; a printed page cannot play them, hence Figures 3-4 below).</p>
+
+<div class="diagram-wrap">
+<img src="../results/figures/print/sim_single_agent_bw.svg" alt="single agent round trip">
+</div>
+<p class="fig-caption"><b>Figure 3.</b> One simulated round trip. The dashed route detours into
+a dead end and is forced to re-traverse the connecting corridor on the way back - the situation
+Section 6.1 is about.</p>
+
+<div class="diagram-wrap">
+<img src="../results/figures/print/sim_bottleneck_bw.svg" alt="two agent bottleneck round">
+</div>
+<p class="fig-caption"><b>Figure 4.</b> A later round, after both wings have already searched
+their own three corridors down to near-certainty: both agents independently plan a route through
+the shared bridge to the still-unexplored valley in the same round. Solid = agent A, dashed =
+agent B; where the two lines coincide is exactly the shared edge both must use - the
+forced-overlap situation Section 6.2 is about.</p>
+</div>
+
+<!-- ============ 4. IMPLEMENTATION ============ -->
+<div class="section">
+<h2><span class="sec-num">4.</span> Implementation</h2>
+
+<h3><span class="sec-num">4.1</span> Module Overview</h3>
+<p>Everything is a from-scratch, dependency-free Python 3 implementation - no
+numpy/scipy/matplotlib, so environment, inference and planning logic are all auditable in a few
+hundred lines each, and the figures in this report are drawn by a small built-in SVG writer
+rather than a plotting library.</p>
+
+<table>
+<tr><th>File</th><th>Role</th></tr>
+<tr><td><code>src/environment.py</code></td><td>Graph environments: random pruned-grid facility
+generator, fixed bottleneck facility, independent per-edge hazard planting.</td></tr>
+<tr><td><code>src/inference.py</code></td><td>Three belief-update rules plus the derivation of
+the corrected multi-visit closed form (Section 2.3).</td></tr>
+<tr><td><code>src/planner.py</code></td><td>Greedy expected-information-gain round-trip path
+planner: enumerates candidate routes and scores them by exact expected entropy reduction.</td></tr>
+<tr><td><code>src/metrics.py</code></td><td>Entropy, Brier score, log loss and recall@k against
+planted ground truth.</td></tr>
+<tr><td><code>src/svgplot.py</code></td><td>Dependency-free SVG line-chart writer used for every
+chart in this report.</td></tr>
+<tr><td><code>experiment{1,2,4}_*.py</code></td><td>The three Monte Carlo experiments in
+Section 6.</td></tr>
+<tr><td><code>make_diagrams.py</code>, <code>make_animation.py</code></td><td>Static and animated
+figures of both environments, colour and black-and-white variants.</td></tr>
+</table>
+
+<h3><span class="sec-num">4.2</span> Controlling for Confounds</h3>
+<p>Both Experiment 1 and Experiment 2 (Sections 6.1-6.2) hold the <i>sequence of paths taken and
+outcomes observed</i> fixed across the methods being compared - one canonical, best-available
+belief map always drives planning decisions, and every compared update rule is then replayed
+against that same sequence. This isolates the comparison to the quality of the belief-update
+rule itself, rather than confounding it with different methods exploring different parts of the
+map because their beliefs happened to diverge.</p>
+</div>
+
+<!-- ============ 5. EXPERIMENTAL SETUP ============ -->
+<div class="section">
+<h2><span class="sec-num">5.</span> Experimental Setup</h2>
+
+<h3><span class="sec-num">5.1</span> Monte Carlo Parameters</h3>
+<table>
+<tr><th>Experiment</th><th>Environment</th><th>Trials</th><th>Rounds</th><th>Lethality</th><th>False positive</th><th>Hazard prior</th></tr>
+<tr><td>1 - revisit handling</td><td>Random facility</td><td>40</td><td>45</td><td>0.85</td><td>0.04</td><td>0.15</td></tr>
+<tr><td>2 - bottleneck overlap</td><td>Bottleneck facility</td><td>400</td><td>6</td><td>0.85</td><td>0.04</td><td>0.20</td></tr>
+<tr><td>4 - rate misspecification</td><td>Random facility</td><td>30 / setting</td><td>40</td><td>0.85 (true)</td><td>0.04 (true)</td><td>0.15</td></tr>
+</table>
+<p class="table-note">Seeds are fixed in each script (<code>20260906</code>,
+<code>8675309</code>, <code>42424242</code> respectively); re-running reproduces every number in
+this report exactly.</p>
+
+<h3><span class="sec-num">5.2</span> Metrics</h3>
+<p>The reference paper evaluates convergence with a single metric: total Shannon entropy of the
+belief map, plus a count of destroyed agents. Entropy measures how <i>confident</i> a belief map
+is, not how <i>correct</i> it is - a confidently wrong map has low entropy and looks, by that
+metric alone, like a success. Alongside entropy, every result below also reports:</p>
+<ul>
+<li><b>Brier score</b> - mean squared error between believed hazard probability and the
+planted ground truth, averaged over all cells; 0 is perfect.</li>
+<li><b>Log loss</b> - the proper scoring rule most sensitive to overconfident miscalibration.</li>
+<li><b>Recall@k</b> - of the <code>k</code> highest-belief cells against the true hazard set,
+with <code>k</code> set to the true hazard count.</li>
+</ul>
+</div>
+
+<!-- ============ 6. RESULTS ============ -->
+<div class="section">
+<h2><span class="sec-num">6.</span> Results</h2>
+
+<h3><span class="sec-num">6.1</span> Revisit Handling</h3>
+<p>Three update rules replay the identical sequence of planned paths and observed outcomes each
+round (Section 4.2): <code>weighted_average</code> (the pre-existing method [18]/[26], applied
+to a revisiting path exactly as its own equations read, since it was never extended for
+revisits either); <code>bn_paper_literal</code> (Section 2.4's best-effort literal reading of
+Remark 1); and <code>bn_exact</code> (the corrected closed form, Section 2.3). Across the 40
+trials, agents revisited some corridor an average of 135 extra times per trial over 45 rounds -
+about three extra visits per round - confirming that in a corridor-network environment, the
+situation Remark 1 waves at is close to the common case, not a rare edge case.</p>
+
+<div class="table-label">Table 1. Experiment 1, round 45 of 45, averaged over 40 trials.</div>
+<table>
+<tr><th>Method</th><th>Entropy [nats]</th><th>Brier score</th><th>Log loss</th><th>Recall@k</th></tr>
+<tr><td>Weighted-average [18]</td><td>6.014</td><td>0.135</td><td>0.803</td><td>0.298</td></tr>
+<tr><td>BN, paper's literal revisit rule</td><td>6.062</td><td>0.128</td><td>0.691</td><td>0.202</td></tr>
+<tr><td>BN, corrected revisit rule (ours)</td><td>6.391</td><td>0.133</td><td>0.428</td><td>0.273</td></tr>
+</table>
+<p class="table-note">The literal revisit rule reaches the <i>lowest</i> entropy of the three -
+it looks the most converged - while having the <i>worst</i> log loss of the two Bayesian-network
+variants (0.691 vs. 0.428, a 62% relative gap) and worse recall@k than either alternative.</p>
+
+<img src="../results/figures/print/experiment1_entropy_bw.svg" alt="entropy convergence, experiment 1">
+<p class="fig-caption"><b>Figure 5.</b> Belief-map entropy vs. search round. The literal revisit
+rule (dashed) converges to visibly lower entropy than the corrected rule (dotted) - it looks
+better converged by the paper's own metric.</p>
+
+<img src="../results/figures/print/experiment1_brier_bw.svg" alt="Brier score, experiment 1">
+<p class="fig-caption"><b>Figure 6.</b> Brier score against the same ground truth. The ranking
+inverts: the corrected rule (dotted) is the most accurate throughout, and the literal revisit
+rule (dashed) is no better than weighted-averaging (solid) despite its lower entropy in Figure
+5.</p>
+
+<p>A concrete instance: in one trial, an edge with <i>no</i> planted hazard was visited twice in
+a single round trip that ended in the agent's destruction elsewhere on the same path. Starting
+from the shared prior of 0.15:</p>
+
+<div class="table-label">Table 2. One representative before/after update (two visits, agent destroyed elsewhere on the same path).</div>
+<table>
+<tr><th>Method</th><th>Belief before</th><th>Belief after</th></tr>
+<tr><td>Weighted-average</td><td>0.150</td><td>0.374</td></tr>
+<tr><td>BN, paper's literal revisit rule</td><td>0.150</td><td>0.287</td></tr>
+<tr><td>BN, corrected revisit rule (ours)</td><td>0.150</td><td>0.288</td></tr>
+</table>
+<p class="table-note">At only two visits - the least possible in this environment, since a
+there-and-back round trip visits every outbound edge exactly twice and no more - the literal and
+corrected rules are still close. The divergence in Table 1 accumulates from many such two-visit
+updates recurring on the same frequently used corridors across dozens of rounds, not from any
+single dramatic event, which is exactly why the paper's own single-round formulation would not
+have surfaced it.</p>
+
+<h3><span class="sec-num">6.2</span> Multi-Agent Overlap on a Bottleneck</h3>
+<p>On the bottleneck facility (Section 3.2), one shared best-available belief map decides both
+wings' routes each round (Section 4.2), and two ways of folding the round's two independent
+observations back into the shared map are compared: <code>naive_union</code> (exactly Algorithm
+3 as specified - each base station computes its local posterior in parallel from the same
+round-start prior, and the server unions the two local results, discarding one agent's
+observation of any edge both happened to touch) and <code>corrected_fusion</code> (the server
+instead composes both agents' observations sequentially into the shared prior, which Section 2.3
+shows is exact for conditionally-independent evidence about a shared variable). Across 400
+trials of 6 rounds each, both wings' planned routes used the shared bridge edge in 18.9% of the
+2,400 simulated rounds.</p>
+
+<div class="table-label">Table 3. Experiment 2, bridge-edge accuracy, 400 trials.</div>
+<table>
+<tr><th>Condition</th><th>Naive union</th><th>Corrected fusion</th></tr>
+<tr><td>Bridge Brier, rounds <i>with</i> forced overlap (n=453)</td><td>0.088</td><td>0.062</td></tr>
+<tr><td>Bridge Brier, rounds without overlap (n=1,947)</td><td>0.123</td><td>0.122</td></tr>
+<tr><td>Final-round bridge entropy</td><td>0.290</td><td>0.259</td></tr>
+<tr><td>Final-round bridge Brier score</td><td>0.088</td><td>0.076</td></tr>
+<tr><td>Final-round whole-map Brier score</td><td>0.068</td><td>0.063</td></tr>
+</table>
+<p class="table-note">In rounds where the bottleneck was actually shared, discarding one
+agent's observation left the bridge edge's belief about 30% less accurate than properly fusing
+both. In rounds without overlap the two strategies are statistically indistinguishable, as
+expected - the naive union is only wrong precisely when it has to make a choice it should not
+have to make.</p>
+
+<img src="../results/figures/print/experiment2_bridge_brier_bw.svg" alt="bridge Brier score, experiment 2">
+<p class="fig-caption"><b>Figure 7.</b> Bridge-edge Brier score vs. search round. Corrected
+fusion (dashed) stays below naive union (solid) from the first round in which overlap can occur
+onward.</p>
+
+<p>Algorithm 3's parallel local computation followed by a plain set union is exact if, and only
+if, the per-round regions are disjoint. The entropy-weighted Voronoi partitioning this builds on
+constructs regions that are disjoint by construction <i>in continuous 2D space</i>. A graph
+environment with a cut edge has no such guarantee: the bridge edge here is not merely difficult
+to partition well, it is topologically impossible to assign to one wing without physically
+cutting the other wing off from the valley. No amount of better Voronoi weighting fixes this,
+because the problem is not the partitioning heuristic - it is the assumption that a partition
+can always be found.</p>
+
+<h3><span class="sec-num">6.3</span> Entropy Is Not a Correctness Metric</h3>
+<p>This is not a separate experiment; it is a pattern visible in both results above. In Section
+6.1, the literal revisit rule reaches lower final entropy (6.062 vs. 6.391 nats, Table 1) than
+the corrected rule while having 62% worse log loss - by the paper's own metric the literal rule
+looks better converged; by any proper scoring rule against the actual planted hazards, it is the
+worse one. In Section 6.2, naive union's higher final entropy (0.290 vs. 0.259, Table 3)
+happens to agree with its worse Brier score, because that case really is throwing away
+information rather than manufacturing false certainty. The contrast between the two results is
+itself informative: entropy can either overstate or roughly track correctness depending on
+<i>why</i> it changed, which is exactly why it cannot be relied on alone to tell the two
+situations apart without an independent check against ground truth - a check a simulation study
+can run and a real deployment cannot.</p>
+
+<h3><span class="sec-num">6.4</span> Sensor-Rate Misspecification</h3>
+<p>The reference paper tests robustness to false positives and negatives, but in every reported
+run the belief-update rule is handed the <i>same</i> rates used to generate the simulated world.
+A real deployment estimates these rates from limited field data and is likely to get them at
+least somewhat wrong, often in the optimistic direction. Holding the true simulated lethality
+(0.85) and false-positive rate (0.04) fixed, the rate handed to <i>both</i> the planner and the
+belief update was swept away from the truth: a false-positive shrink sweep (assumed rate at
+100%, 50%, 25%, 10% and 2% of the true value) and a lethality bias sweep (assumed value biased
+&minus;35% to +35% relative to the truth), 30 trials per setting, 40 rounds per trial.</p>
+
+<div class="table-label">Table 4. Experiment 4, false-positive shrink sweep, 30 trials/setting.</div>
+<table>
+<tr><th>Assumed false positive</th><th>WA Brier</th><th>BN Brier</th><th>WA log loss</th><th>BN log loss</th></tr>
+<tr><td>100% of true (correct)</td><td>0.147</td><td>0.139</td><td>0.831</td><td>0.440</td></tr>
+<tr><td>50%</td><td>0.157</td><td>0.147</td><td>0.817</td><td>0.465</td></tr>
+<tr><td>25%</td><td>0.137</td><td>0.135</td><td>0.687</td><td>0.431</td></tr>
+<tr><td>10%</td><td>0.157</td><td>0.150</td><td>0.976</td><td>0.460</td></tr>
+<tr><td>2%</td><td>0.147</td><td>0.136</td><td>0.815</td><td>0.425</td></tr>
+</table>
+<p class="table-note">The lethality bias sweep (not tabulated) shows the same pattern: BN log
+loss stays in 0.39-0.51 across all seven levels tested, weighted-average ranges 0.59-0.98.
+Brier-score differences between the two methods are small (at most 0.011) and mostly within one
+run-to-run standard deviation at this sample size (&asymp;0.04-0.08, n=30).</p>
+
+<img src="../results/figures/print/experiment4_fp_sweep_bw.svg" alt="false positive misspecification sweep, experiment 4">
+<p class="fig-caption"><b>Figure 8.</b> Final Brier score vs. assumed false-positive rate. Both
+methods move within a narrow band with no consistent monotonic trend at this sample size.</p>
+
+<p>This stress test set out to find a differential robustness failure - a setting where the
+Bayesian-network method's reported noise resilience breaks down once the assumed rate, not just
+the noise itself, is wrong. It did not find one at this sample size: if anything, the
+Bayesian-network method's log-loss advantage over weighted-averaging persisted across every
+tested level. Two caveats limit how much weight this negative result can bear: the assumed rate
+affects both the planner's chosen routes and the belief update at once, so a confound between
+different exploration behaviour and different inference quality is not ruled out here the way it
+was in Sections 6.1-6.2; and n=30 trials per setting is enough to see the log-loss pattern
+clearly but not enough to rule out a smaller Brier-score effect. This is reported rather than
+omitted: an inconclusive, honestly run stress test the published literature has not attempted is
+still evidence, and the question remains open for a larger-scale follow-up.</p>
+</div>
+
+<!-- ============ 7. FINDINGS ============ -->
+<div class="section">
+<h2><span class="sec-num">7.</span> Findings</h2>
+
+<p>Three properties of the reference method are worth stating on their own, because they are not
+obvious from the paper or from its own reported experiments and only appear once the method is
+measured on an environment its own evaluation never used. A fourth is reported as an open
+question rather than a confirmed gap.</p>
+
+<div class="finding">
+<div class="finding-title">Finding 1 &mdash; the revisit rule is under-specified, and the natural reading of it is wrong</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> The reference paper's Remark 1 states that a
+revisited cell's likelihood is found by "summing the probability of each instance," without
+giving the resulting formula. Taking that literally and comparing it against the exact closed
+form derived in Section 2.3, on a floor plan that forces an average of three extra revisits per
+round, the literal rule reaches 62% worse log loss against ground truth after 45 rounds, while
+reaching <i>lower</i> entropy - it looks more converged while being less correct.</p>
+<p style="margin-bottom:0;"><b>Why it matters.</b> The paper's formal problem statement requires
+round trips ("agents start and end their search rounds at their designated base stations"),
+which is exactly the condition that forces revisits whenever the environment is not fully
+cyclic. Its own reported experiments use one-way point-to-point traversal on an open grid, which
+never revisits a cell and therefore never exercises Remark 1 at all. The gap survives
+publication not because the mathematics is subtle - the correct closed form is a two-line
+derivation - but because the evaluation environment cannot trigger the code path that needed
+it.</p>
+</div>
+
+<div class="finding">
+<div class="finding-title">Finding 2 &mdash; non-overlapping partitions are a continuous-space assumption that graphs violate</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> Algorithm 3's per-round server merge is a
+plain set union of two independently computed local posteriors, valid only if the two agents'
+regions never overlap. On a facility where both wings' only route to a shared valuable region is
+one bridge edge, both agents' routes used that edge in 18.9% of 2,400 simulated rounds; the
+specified union then discards one agent's observation of it, leaving that edge about 30% less
+accurate than a corrected fusion in the rounds it actually happens.</p>
+<p style="margin-bottom:0;"><b>Why it matters.</b> An entropy-weighted Voronoi partition over
+continuous 2D space is disjoint by construction. A graph with a cut edge - a single bridge, a
+single elevator shaft, a single mountain pass - has no such guarantee, and no amount of better
+Voronoi weighting fixes it, because the problem is not the partitioning heuristic, it is the
+assumption that a partition can always be found. Any real deployment with a genuine chokepoint
+inherits this exactly as built here.</p>
+</div>
+
+<div class="finding">
+<div class="finding-title">Finding 3 &mdash; entropy is not a correctness metric</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> The reference paper's sole convergence metric
+is Shannon entropy of the belief map. In Finding 1, lower entropy accompanied a worse belief
+(overconfidence from double-counted evidence); in Finding 2, higher entropy accompanied a worse
+belief (information genuinely discarded). Entropy moved in opposite directions relative to
+correctness across the two findings.</p>
+<p style="margin-bottom:0;"><b>Why it matters.</b> A belief map's entropy is a statement about
+its internal consistency, computable without the true hazard locations. Correctness requires
+comparing against something the estimator does not have access to in the field - but a
+simulation study, unlike a real deployment, has the ground truth, and not using it to check for
+exactly this kind of silent miscalibration leaves failure modes like Finding 1 undetectable by
+the paper's own reported figures.</p>
+</div>
+
+<div class="finding">
+<div class="finding-title">Finding 4 &mdash; rate misspecification: an open question, not a confirmed gap</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> Feeding the belief update a false-positive or
+lethality assumption that does not match the true simulated rate did not produce a clear,
+sample-robust degradation gap between the Bayesian-network method and weighted-averaging at
+n=30 trials per setting; the Bayesian-network method's log-loss advantage in fact persisted
+across every level tested.</p>
+<p style="margin-bottom:0;"><b>Why it matters.</b> The reference paper never tests this axis -
+its inference procedure always knows its own noise level exactly, because the same numbers
+generate the world and update the belief. This report's stress test is a harder, more realistic
+test than the paper's own, and it is reported as an honest negative result: it does not confirm
+the paper's resilience claim extends to this regime, but it also failed to falsify it, and a
+larger-scale follow-up is needed before either conclusion is warranted.</p>
+</div>
+</div>
+
+<!-- ============ 8. RELATION TO CITED WORK ============ -->
+<div class="section">
+<h2><span class="sec-num">8.</span> Relation to Cited Follow-Up Work</h2>
+
+<p>The reference paper cites several follow-ups by its own authors and others. Based on their
+published titles and abstracts, none address the three confirmed findings above.</p>
+
+<p><b>McGuire, Otte &amp; Sofge (2024) [13]</b>, "Valuing attrition in a fleet of robots used as
+path-based sensors," studies how to price the loss of agents against information gained - a
+decision-theoretic question about when to stop searching, not about whether a given belief
+update is numerically correct under revisits or overlapping partitions.</p>
+
+<p><b>Mendelsohn, Sofge &amp; Otte (2024) [14]</b>, "Enhancing search and rescue... through
+path-based sensors with backtracking," studies backtracking as a deliberate <i>planning</i>
+strategy rather than as an unavoidable structural property of corridor topology, and does not,
+from its abstract, address the Bayesian-network posterior's correctness under repeat visits.</p>
+
+<p><b>Srivastava, Suresh &amp; Nieto-Granda (2025) [25]</b>, "Behaviorally adaptive multi-robot
+hazard localization in failure-prone, communication-denied environments," addresses adapting
+agent behaviour to failure-prone conditions - closer in spirit to Finding 4's misspecification
+question, but framed around behavioural adaptation rather than auditing the inference update's
+calibration under a wrong assumed fault model, and does not appear to use a graph-topology
+environment.</p>
+
+<p>None of the cited works, as far as their titles and abstracts indicate, use a graph
+environment with a genuine topological cut edge, and none formalise or test the multi-visit
+closed form derived in Section 2.3. The environment design in Section 3 was chosen specifically
+to expose gaps that a continuous, cycle-rich search space cannot.</p>
+</div>
+
+<!-- ============ 9. LIMITATIONS ============ -->
+<div class="section">
+<h2><span class="sec-num">9.</span> Limitations and Future Scope</h2>
+
+<p>Several choices bound how far these results generalise, and are listed here rather than left
+implicit.</p>
+
+<ul>
+<li><b>Scale.</b> All experiments use small graphs (10-24 edges) so that exact Bayesian
+inference and exhaustive-enough path enumeration stay tractable in pure Python. The mechanism
+behind each finding is scale-independent, but reported effect sizes should be expected to shift
+on larger, differently shaped networks.</li>
+<li><b>Planner, not the paper's planner.</b> Path selection here uses a greedy
+expected-information-gain search over enumerated round-trip candidates, not the reference
+paper's time-expanded reverse-search algorithm. Both solve the same objective and should behave
+similarly, but are not code-identical.</li>
+<li><b>Weighted-average revisit handling is also ad hoc.</b> The pre-existing method was never
+extended for repeat visits either; the baseline here applies it to a revisiting path exactly as
+its published equations read, which is a defensible "what a practitioner would do," not a claim
+of uniqueness.</li>
+<li><b>Single seed lineage per experiment.</b> Results are reproducible but drawn from one fixed
+seed family each (Section 5.1); a wider seed sweep would tighten the confidence bounds,
+particularly for Finding 4.</li>
+<li><b>Finding 4 is explicitly inconclusive</b> and should not be read as confirming or
+refuting the paper's noise-resilience claim beyond the specific settings tested.</li>
+</ul>
+
+<p>Two extensions would sharpen this work further: a distributed reconciliation protocol for
+Algorithm 3 that detects a shared edge before the union step and fuses it correctly rather than
+requiring a centralised planning belief (used here only to keep the comparison controlled), and
+a misspecification sweep large enough in trial count to bound the Brier-score effect Section 6.4
+could not resolve.</p>
+</div>
+
+<!-- ============ 10. REPRODUCIBILITY ============ -->
+<div class="section">
+<h2><span class="sec-num">10.</span> Reproducibility</h2>
+<p>Every number and figure in this report comes from the committed repository, at the seeds
+named in Table 1 of Section 5.1.</p>
+<ul>
+<li><b>Tables 1-2, Figures 5-6</b>: <code>python experiment1_revisits.py</code>.</li>
+<li><b>Table 3, Figure 7</b>: <code>python experiment2_bottleneck.py</code>.</li>
+<li><b>Table 4, Figure 8</b>: <code>python experiment4_misspecification.py</code>.</li>
+<li><b>Figures 1-2</b>: <code>python make_diagrams.py</code>.</li>
+<li><b>Figures 3-4</b> (and the animated HTML versions): <code>python make_animation.py</code>.</li>
+<li>All black-and-white print figures: <code>python make_print_figures.py</code>, run after the
+three experiment scripts above.</li>
+</ul>
+<p>No third-party dependencies are required; everything uses the Python 3 standard library. The
+report itself is <code>report/echo_corridors_report.html</code>; the PDF alongside it is that
+file printed to Letter paper.</p>
+
+<footer>
+Echo Corridors &mdash; project report. Method after A. K. Srivastava, G. P. Kontoudis, D. Sofge
+and M. Otte, <i>Bayesian Networks for Path-Based Sensors: Gathering Information and Path
+Planning in Communication Denied Environments</i>, 2026, building on M. Otte and D. Sofge,
+<i>Path-Based Sensors: Paths as Sensors, Bayesian Updates, and Shannon Information Gathering</i>,
+IEEE Transactions on Automation Science and Engineering, 18(3), 2021, and A. K. Srivastava, G. P.
+Kontoudis, D. Sofge and M. Otte, <i>Distributed Multi-Robot Information Gathering Using
+Path-Based Sensors in Entropy-Weighted Voronoi Regions</i>, International Symposium on
+Distributed Autonomous Robotic Systems, 2022.
+</footer>
+</div>
+
+</body>
+</html>

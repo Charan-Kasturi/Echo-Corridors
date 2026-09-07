@@ -18,23 +18,23 @@
 <line x1="215" y1="435" x2="325" y2="435" stroke="#ddd" stroke-width="2.5"/>
 <line x1="325" y1="435" x2="435" y2="435" stroke="#ddd" stroke-width="2.5"/>
 <path d="M 105,105 L 215,105 L 325,105 L 435,105 L 325,105 L 215,105 L 105,105" fill="none" stroke="#2C6E9B" stroke-width="4" stroke-linecap="round" opacity="0.55" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"><animate attributeName="stroke-dashoffset" from="100" to="0" dur="7s" repeatCount="indefinite"/></path>
-<circle cx="105" cy="105" r="16" fill="#2C6E9B" stroke="#123" stroke-width="2"/><text x="105" y="109" font-size="11" text-anchor="middle" font-family="Georgia, serif">B</text>
-<circle cx="215" cy="105" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="109" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="325" cy="105" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="109" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="435" cy="105" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="435" y="109" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="105" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="105" y="219" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="215" cy="215" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="215" y="219" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="325" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="219" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="435" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="435" y="219" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="105" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="105" y="329" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="215" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="329" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="325" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="329" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="435" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="435" y="329" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="105" cy="435" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="105" y="439" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="215" cy="435" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="439" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="325" cy="435" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="439" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
-<circle cx="435" cy="435" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="435" y="439" font-size="11" text-anchor="middle" font-family="Georgia, serif"></text>
+<circle cx="105" cy="105" r="16" fill="#2C6E9B" stroke="#123" stroke-width="2"/><text x="105" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif">B</text>
+<circle cx="215" cy="105" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="105" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="105" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="435" y="109" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="105" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="215" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="215" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="215" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="435" y="219" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="105" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="325" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="435" y="329" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="105" cy="435" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="105" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="215" cy="435" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="215" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="325" cy="435" r="6" fill="#eef3f7" stroke="#999" stroke-width="2"/><text x="325" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
+<circle cx="435" cy="435" r="8" fill="#fff3e0" stroke="#B08B2D" stroke-width="2"/><text x="435" y="439" font-size="11" text-anchor="middle" fill="#000" font-family="Georgia, serif"></text>
 <circle r="9" fill="#2C6E9B" stroke="#fff" stroke-width="2"><animateMotion dur="7s" repeatCount="indefinite" path="M 105,105 L 215,105 L 325,105 L 435,105 L 325,105 L 215,105 L 105,105"/></circle><circle r="13" fill="none" stroke="#2C6E9B" stroke-width="1.5" opacity="0.5"><animateMotion dur="7s" repeatCount="indefinite" path="M 105,105 L 215,105 L 325,105 L 435,105 L 325,105 L 215,105 L 105,105"/></circle>
 <text x="20" y="24" font-size="16" font-weight="bold">One simulated round trip on a random facility (planned round trip revisits a corridor (dead-end detour))</text>
-<text x="20" y="570" font-size="12" fill="#555">Blue dot = agent following its planned round trip from base station B and back. Red corridors carry a planted hazard (not visible to the agent in advance).</text>
+<text x="20" y="570" font-size="12" fill="#555">Blue dot = agent's planned round trip from base station B and back (planned round trip revisits a corridor (dead-end detour)). Red corridors carry a planted hazard (not visible to the agent in advance).</text>
 </svg>

@@ -14,7 +14,9 @@ Path Planning in Communication Denied Environments"* (2026), evaluated on a
 **new environment** the original paper does not use: graph-shaped corridor
 networks (floor plans, tunnels, bridges) instead of an open continuous
 grid. That change in environment is what surfaces the two structural gaps
-documented in [`report/REPORT.md`](report/REPORT.md):
+documented in the report
+([`report/echo_corridors_report.html`](report/echo_corridors_report.html),
+[PDF](report/echo_corridors_report.pdf)):
 
 1. The paper's own prescription for a path that revisits a corridor is
    mathematically under-specified, and its natural reading is measurably
@@ -39,11 +41,15 @@ record.
 
 Two representative simulated rounds, replayed as looping SVG animations
 (play natively here on GitHub and in any browser -- no GIF, see
-`report/REPORT.md` Section 5.2 for why). Static, non-animated diagrams of
-both environments are also in `results/figures/`.
+`report/echo_corridors_report.html` Section 3.3 for why). Static,
+non-animated diagrams of both environments are also in `results/figures/`.
 
 Read the full write-up, with all figures and numbers, in
-[`report/REPORT.md`](report/REPORT.md).
+[`report/echo_corridors_report.html`](report/echo_corridors_report.html)
+(or the [PDF](report/echo_corridors_report.pdf) -- same content, printed to
+Letter paper). A longer, more informally written companion version is also
+kept at [`report/REPORT.md`](report/REPORT.md) for quick reading directly
+on GitHub.
 
 ## Repository layout
 
@@ -62,9 +68,12 @@ experiment2_bottleneck.py        Finding 2: multi-agent overlap on a bridge
 experiment4_misspecification.py  Finding 4: sensor-rate misspecification
 make_diagrams.py                  static environment topology figures
 make_animation.py                 animated round-trip replays (SVG, not GIF -- see report)
+make_print_figures.py             black-and-white figure set for the print report
 
 results/               generated CSV/JSON summaries + SVG figures
-report/REPORT.md        the full write-up
+report/echo_corridors_report.html   the report (open in a browser)
+report/echo_corridors_report.pdf    the same report, printed to Letter paper
+report/REPORT.md                    longer, informally written companion version
 ```
 
 ## Running it
@@ -78,6 +87,7 @@ python experiment2_bottleneck.py
 python experiment4_misspecification.py
 python make_diagrams.py
 python make_animation.py
+python make_print_figures.py    # after the three experiment scripts above
 ```
 
 Each script writes its own CSV/JSON summaries and SVG figures into
@@ -93,8 +103,8 @@ existence for each corridor on that path is computed in closed form
 (`src/inference.py`); path selection greedily maximizes expected
 information gain, i.e., expected entropy reduction of the belief map,
 matching the objective in the reference paper's Eq. (1). See
-`report/REPORT.md` Section 5 for the full derivation, including the
-multi-visit generalization this project adds.
+`report/echo_corridors_report.html` Section 2.3 for the full derivation,
+including the multi-visit generalization this project adds.
 
 ## License
 
