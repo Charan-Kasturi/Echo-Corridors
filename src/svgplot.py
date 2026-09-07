@@ -20,7 +20,13 @@ def line_chart(path, title, x_label, y_label, series, width=780, height=460,
         label (str), x (list[float]), y (list[float]),
         y_std (optional list[float]), color (optional str)
     """
-    margin_l, margin_r, margin_t, margin_b = 70, 30, 50, 60
+    # Legend is drawn as a stacked list below the title, so its height
+    # (and therefore how far down the plot area must start) depends on how
+    # many series there are.
+    margin_l, margin_r, margin_b = 70, 30, 60
+    legend_top = 40
+    legend_row_h = 18
+    margin_t = legend_top + legend_row_h * len(series) + 14
     plot_w = width - margin_l - margin_r
     plot_h = height - margin_t - margin_b
 
@@ -88,14 +94,14 @@ def line_chart(path, title, x_label, y_label, series, width=780, height=460,
         pts = " ".join(f"{sx(x):.1f},{sy(y):.1f}" for x, y in zip(xs, ys))
         parts.append(f'<polyline points="{pts}" fill="none" stroke="{color}" stroke-width="2.4"/>')
 
-    # legend
-    lx, ly = margin_l + 10, margin_t - 30
-    lx0 = lx
+    # legend -- one entry per row, stacked below the title, so it never
+    # collides with the (centered) title text regardless of label length.
+    lx = margin_l + 6
     for idx, s in enumerate(series):
         color = s.get("color", PALETTE[idx % len(PALETTE)])
-        parts.append(f'<line x1="{lx0}" y1="{ly}" x2="{lx0+22}" y2="{ly}" stroke="{color}" stroke-width="3"/>')
-        parts.append(f'<text x="{lx0+28}" y="{ly+4}" font-size="12.5" fill="#222">{s["label"]}</text>')
-        lx0 += 26 + 9 * len(s["label"]) + 22
+        ly = legend_top + idx * legend_row_h
+        parts.append(f'<line x1="{lx}" y1="{ly}" x2="{lx+22}" y2="{ly}" stroke="{color}" stroke-width="3"/>')
+        parts.append(f'<text x="{lx+28}" y="{ly+4}" font-size="12.5" fill="#222">{s["label"]}</text>')
 
     # titles / axis labels
     parts.append(f'<text x="{width/2:.1f}" y="24" font-size="16" fill="#111" text-anchor="middle" '

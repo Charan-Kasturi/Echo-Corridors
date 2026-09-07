@@ -180,6 +180,27 @@ problem in Finding 2: it is not a rare or contrived layout, but the minimal
 shape of "two facilities sharing one access route to a place both need to
 search."
 
+### 4.3 Watching a round happen
+
+The two animations below replay one representative simulated round each
+(they loop continuously; if your viewer does not render animated SVG, the
+static diagrams above show the same environments). They are SVG, not GIF --
+see [Section 5.2](#52-why-svg-animation-instead-of-a-gif) for why.
+
+![Single-agent round trip, animated](../results/figures/sim_single_agent.svg)
+
+*The agent's planned round trip from the base station, drawn as it is
+traversed. This particular round detours into a dead end and is forced to
+re-traverse the connecting corridor on the way back -- the situation
+Finding 1 is about.*
+
+![Two-agent bottleneck round, animated](../results/figures/sim_bottleneck.svg)
+
+*A later round, after both wings have already searched their own three
+corridors down to near-certainty: both agents independently plan a route
+through the shared bridge to the still-unexplored valley, in the same
+round -- the forced-overlap situation Finding 2 is about.*
+
 ---
 
 ## 5. Implementation
@@ -197,6 +218,7 @@ all auditable in a few hundred lines each:
 | `src/metrics.py` | Entropy, Brier score, log loss, and recall@k against planted ground truth. |
 | `src/svgplot.py` | Minimal SVG line-chart writer used for every figure in this report. |
 | `experiment1_revisits.py`, `experiment2_bottleneck.py`, `experiment4_misspecification.py` | The three experiments described below. |
+| `make_diagrams.py`, `make_animation.py` | Static and animated SVG figures of both environments. |
 
 ### 5.1 The corrected closed form for repeated visits
 
@@ -240,7 +262,23 @@ updating over repeated conditionally-independent observations of the same
 shared variable is mathematically identical to it, are given in full in
 the `inference.py` module docstring.
 
-### 5.2 Controlling for confounds
+### 5.2 Why SVG animation instead of a GIF
+
+This project has no third-party dependencies -- everything, including the
+charts, runs on the Python standard library alone. Producing an actual
+`.gif` would need an image-encoding library (e.g. Pillow) to handle
+palette quantization and LZW compression; none is installed, and this
+Python distribution has no working `pip` to add one. Hand-rolling a GIF
+encoder from scratch to animate a few line segments would add a binary
+codec for no real benefit, since SMIL-animated SVG (`<animateMotion>`,
+`<animate>`) plays natively in every modern browser and inside GitHub's
+own rendered markdown -- an `![]()` reference to an `.svg` file is served
+as a normal image, and animated SVGs play inside an `<img>` tag the same
+way a GIF would. `make_animation.py` generates the two animated replays
+above; `make_diagrams.py` generates static, non-animated fallbacks of both
+environments for any viewer that does not render SVG animation.
+
+### 5.3 Controlling for confounds
 
 Both Experiment 1 and Experiment 2 hold the *sequence of paths taken and
 outcomes observed* fixed across the methods being compared -- planning
@@ -459,19 +497,20 @@ false-positive rate (0.04) were held fixed, while the rate handed to
 **Results.** Log loss (the metric most sensitive to miscalibration) for
 the Bayesian-network method stayed in a narrow band (0.39-0.51) across
 every tested setting in both sweeps, consistently better than
-weighted-averaging's log loss, which ranged much more widely (0.53-1.13)
+weighted-averaging's log loss, which ranged much more widely (0.59-0.98)
 and did not move monotonically with the misspecification level. Brier
-score differences between the two methods were small (typically <0.02)
-and within one standard deviation of the run-to-run noise at this sample
-size (Brier standard deviation ≈0.05-0.10 per setting, n=30).
+score differences between the two methods were small (at most 0.011,
+typically much less) and mostly within one standard deviation of the
+run-to-run noise at this sample size (Brier standard deviation
+≈0.04-0.08 per setting, n=30).
 
 | Assumed false-positive rate (fraction of true) | Weighted-avg. Brier | BN Brier | Weighted-avg. log loss | BN log loss |
 |---|---|---|---|---|
-| 100% (correctly specified) | 0.158 | 0.153 | 0.744 | 0.476 |
-| 50% | 0.129 | 0.127 | 0.746 | 0.409 |
-| 25% | 0.122 | 0.121 | 0.550 | 0.395 |
-| 10% | 0.158 | 0.142 | 0.943 | 0.440 |
-| 2% | 0.161 | 0.156 | 0.936 | 0.473 |
+| 100% (correctly specified) | 0.147 | 0.139 | 0.831 | 0.440 |
+| 50% | 0.157 | 0.147 | 0.817 | 0.465 |
+| 25% | 0.137 | 0.135 | 0.687 | 0.431 |
+| 10% | 0.157 | 0.150 | 0.976 | 0.460 |
+| 2% | 0.147 | 0.136 | 0.815 | 0.425 |
 
 ![False-positive misspecification sweep](../results/figures/experiment4_fp_sweep.svg)
 ![Lethality misspecification sweep](../results/figures/experiment4_lethality_sweep.svg)
@@ -587,7 +626,8 @@ is reported as such rather than adjusted to fit a cleaner narrative.
 python experiment1_revisits.py        # Finding 1 -- writes results/experiment1_*
 python experiment2_bottleneck.py      # Finding 2 -- writes results/experiment2_*
 python experiment4_misspecification.py  # Finding 4 -- writes results/experiment4_*
-python make_diagrams.py               # environment figures
+python make_diagrams.py               # static environment figures
+python make_animation.py              # animated round-trip replays
 ```
 
 No third-party dependencies are required; everything uses the Python 3

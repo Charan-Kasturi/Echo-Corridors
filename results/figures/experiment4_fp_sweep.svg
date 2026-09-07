@@ -2,36 +2,36 @@
 <rect x="0" y="0" width="780" height="460" fill="#ffffff"/>
 <line x1="70" y1="400.0" x2="750" y2="400.0" stroke="#e3e3e3" stroke-width="1"/>
 <text x="60" y="404.0" font-size="12" fill="#333" text-anchor="end">0.000</text>
-<line x1="70" y1="330.0" x2="750" y2="330.0" stroke="#e3e3e3" stroke-width="1"/>
-<text x="60" y="334.0" font-size="12" fill="#333" text-anchor="end">0.035</text>
-<line x1="70" y1="260.0" x2="750" y2="260.0" stroke="#e3e3e3" stroke-width="1"/>
-<text x="60" y="264.0" font-size="12" fill="#333" text-anchor="end">0.070</text>
-<line x1="70" y1="190.0" x2="750" y2="190.0" stroke="#e3e3e3" stroke-width="1"/>
-<text x="60" y="194.0" font-size="12" fill="#333" text-anchor="end">0.104</text>
-<line x1="70" y1="120.0" x2="750" y2="120.0" stroke="#e3e3e3" stroke-width="1"/>
-<text x="60" y="124.0" font-size="12" fill="#333" text-anchor="end">0.139</text>
-<line x1="70" y1="50.0" x2="750" y2="50.0" stroke="#e3e3e3" stroke-width="1"/>
-<text x="60" y="54.0" font-size="12" fill="#333" text-anchor="end">0.174</text>
-<line x1="70.0" y1="50" x2="70.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="70" y1="338.0" x2="750" y2="338.0" stroke="#e3e3e3" stroke-width="1"/>
+<text x="60" y="342.0" font-size="12" fill="#333" text-anchor="end">0.034</text>
+<line x1="70" y1="276.0" x2="750" y2="276.0" stroke="#e3e3e3" stroke-width="1"/>
+<text x="60" y="280.0" font-size="12" fill="#333" text-anchor="end">0.068</text>
+<line x1="70" y1="214.0" x2="750" y2="214.0" stroke="#e3e3e3" stroke-width="1"/>
+<text x="60" y="218.0" font-size="12" fill="#333" text-anchor="end">0.102</text>
+<line x1="70" y1="152.0" x2="750" y2="152.0" stroke="#e3e3e3" stroke-width="1"/>
+<text x="60" y="156.0" font-size="12" fill="#333" text-anchor="end">0.136</text>
+<line x1="70" y1="90.0" x2="750" y2="90.0" stroke="#e3e3e3" stroke-width="1"/>
+<text x="60" y="94.0" font-size="12" fill="#333" text-anchor="end">0.170</text>
+<line x1="70.0" y1="90" x2="70.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="70.0" y="420" font-size="12" fill="#333" text-anchor="middle">0.03</text>
-<line x1="206.0" y1="50" x2="206.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="206.0" y1="90" x2="206.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="206.0" y="420" font-size="12" fill="#333" text-anchor="middle">0.22</text>
-<line x1="342.0" y1="50" x2="342.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="342.0" y1="90" x2="342.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="342.0" y="420" font-size="12" fill="#333" text-anchor="middle">0.42</text>
-<line x1="478.0" y1="50" x2="478.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="478.0" y1="90" x2="478.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="478.0" y="420" font-size="12" fill="#333" text-anchor="middle">0.61</text>
-<line x1="614.0" y1="50" x2="614.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="614.0" y1="90" x2="614.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="614.0" y="420" font-size="12" fill="#333" text-anchor="middle">0.81</text>
-<line x1="750.0" y1="50" x2="750.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
+<line x1="750.0" y1="90" x2="750.0" y2="400" stroke="#f0f0f0" stroke-width="1"/>
 <text x="750.0" y="420" font-size="12" fill="#333" text-anchor="middle">1.00</text>
-<line x1="70" y1="50" x2="70" y2="400" stroke="#222" stroke-width="1.3"/>
+<line x1="70" y1="90" x2="70" y2="400" stroke="#222" stroke-width="1.3"/>
 <line x1="70" y1="400" x2="750" y2="400" stroke="#222" stroke-width="1.3"/>
-<polyline points="750.0,82.2 401.3,140.0 226.9,153.7 122.3,82.0 70.0,75.9" fill="none" stroke="#2C6E9B" stroke-width="2.4"/>
-<polyline points="750.0,92.4 401.3,145.2 226.9,155.8 122.3,113.9 70.0,86.4" fill="none" stroke="#C1553B" stroke-width="2.4"/>
-<line x1="80" y1="20" x2="102" y2="20" stroke="#2C6E9B" stroke-width="3"/>
-<text x="108" y="24" font-size="12.5" fill="#222">Weighted-average [18]</text>
-<line x1="317" y1="20" x2="339" y2="20" stroke="#C1553B" stroke-width="3"/>
-<text x="345" y="24" font-size="12.5" fill="#222">Bayesian network (ours, exact)</text>
+<polyline points="750.0,132.0 401.3,113.5 226.9,149.7 122.3,113.0 70.0,131.4" fill="none" stroke="#2C6E9B" stroke-width="2.4"/>
+<polyline points="750.0,145.8 401.3,131.0 226.9,154.0 122.3,126.6 70.0,151.3" fill="none" stroke="#C1553B" stroke-width="2.4"/>
+<line x1="76" y1="40" x2="98" y2="40" stroke="#2C6E9B" stroke-width="3"/>
+<text x="104" y="44" font-size="12.5" fill="#222">Weighted-average [18]</text>
+<line x1="76" y1="58" x2="98" y2="58" stroke="#C1553B" stroke-width="3"/>
+<text x="104" y="62" font-size="12.5" fill="#222">Bayesian network (ours, exact)</text>
 <text x="390.0" y="24" font-size="16" fill="#111" text-anchor="middle" font-weight="bold">Experiment 4: effect of underestimating the false-positive rate</text>
 <text x="390.0" y="446" font-size="13" fill="#333" text-anchor="middle">Assumed false-positive rate as a fraction of the true rate</text>
 <text x="18" y="230.0" font-size="13" fill="#333" text-anchor="middle" transform="rotate(-90 18 230.0)">Final Brier score</text>

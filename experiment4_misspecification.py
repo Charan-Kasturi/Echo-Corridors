@@ -74,12 +74,18 @@ def run_trial(seed, assumed_l, assumed_fp):
 
 
 def sweep(levels, make_rates, tag):
+    # deterministic seed offset per (tag, level) -- NOT Python's built-in
+    # hash(), which is randomized per-process by default (PYTHONHASHSEED)
+    # and would silently break the "fixed seeds reproduce these numbers
+    # exactly" claim made throughout this project's documentation.
+    tag_offset = 0 if tag == "fp" else 500_000
     rows = []
-    for level in levels:
+    for level_idx, level in enumerate(levels):
         assumed_l, assumed_fp = make_rates(level)
         agg = {m: {"brier": [], "logloss": [], "entropy": []} for m in METHODS}
         for t in range(TRIALS):
-            result = run_trial(SEED0 + hash((tag, level, t)) % 1_000_000, assumed_l, assumed_fp)
+            seed = SEED0 + tag_offset + level_idx * 1_000 + t
+            result = run_trial(seed, assumed_l, assumed_fp)
             for m in METHODS:
                 for k in agg[m]:
                     agg[m][k].append(result[m][k])

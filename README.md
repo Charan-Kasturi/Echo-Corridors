@@ -32,6 +32,16 @@ not find the effect it went looking for -- included anyway, because a
 clean negative result run at this scale is still worth having on the
 record.
 
+## What it looks like
+
+![Single-agent round trip, animated](results/figures/sim_single_agent.svg)
+![Two-agent bottleneck round, animated](results/figures/sim_bottleneck.svg)
+
+Two representative simulated rounds, replayed as looping SVG animations
+(play natively here on GitHub and in any browser -- no GIF, see
+`report/REPORT.md` Section 5.2 for why). Static, non-animated diagrams of
+both environments are also in `results/figures/`.
+
 Read the full write-up, with all figures and numbers, in
 [`report/REPORT.md`](report/REPORT.md).
 
@@ -50,7 +60,8 @@ src/
 experiment1_revisits.py          Finding 1: revisit handling
 experiment2_bottleneck.py        Finding 2: multi-agent overlap on a bridge
 experiment4_misspecification.py  Finding 4: sensor-rate misspecification
-make_diagrams.py                  environment topology figures
+make_diagrams.py                  static environment topology figures
+make_animation.py                 animated round-trip replays (SVG, not GIF -- see report)
 
 results/               generated CSV/JSON summaries + SVG figures
 report/REPORT.md        the full write-up
@@ -66,6 +77,7 @@ python experiment1_revisits.py
 python experiment2_bottleneck.py
 python experiment4_misspecification.py
 python make_diagrams.py
+python make_animation.py
 ```
 
 Each script writes its own CSV/JSON summaries and SVG figures into
