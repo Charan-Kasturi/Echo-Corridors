@@ -62,6 +62,7 @@ def run_trial(seed):
     example = None
 
     for r in range(ROUNDS):
+        plan_belief = belief["bn_exact"]  # replan from the updated belief each round
         path = planner.plan_best_path(graph, plan_belief, graph.base, LETHALITY, FALSE_POSITIVE,
                                        max_out_len=MAX_OUT_LEN, max_candidates=250)
         if not path:
