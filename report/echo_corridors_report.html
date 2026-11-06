@@ -97,7 +97,7 @@
   <div class="subtitle">Bayesian Networks for Path-Based Sensors<br>on Graph-Shaped Environments</div>
   <hr>
   <div class="author">Charan Kasturi</div>
-  <div class="date">September 2026</div>
+  <div class="date">September 2026 &middot; revised 5 November 2026</div>
   <div class="abstract">
     <span class="abstract-label">Abstract</span>
     This report documents an independent, from-scratch implementation of the path-based sensor
@@ -111,7 +111,7 @@
     structural gaps in the reference method that its own open-grid experiments cannot trigger. First,
     the paper's own prescription for a path that revisits a cell is mathematically under-specified,
     and the natural reading of it is measurably less accurate than a corrected closed form derived
-    here (log loss against ground truth roughly 1.6&times; worse over 45 rounds). Second, the
+    here (log loss against ground truth roughly 3.2&times; worse over 45 rounds). Second, the
     multi-robot algorithm assumes a disjoint search-region partition always exists so that per-agent
     local updates can be merged by a plain set union; on a graph with a genuine cut edge this
     assumption is false, and the algorithm's specified merge step silently discards one agent's
@@ -119,9 +119,9 @@
     forced to share it. A third, cross-cutting observation runs through both: the reference paper's
     sole convergence metric, Shannon entropy, cannot distinguish a correctly converged belief map
     from a confidently wrong one, which is exactly why neither gap is visible in its own reported
-    figures. A fourth stress test, on sensor-reliability misspecification, is reported as an honest,
-    inconclusive negative result rather than adjusted to fit a cleaner narrative. Every figure and
-    number in this document is reproducible from the committed repository.
+    figures. Two further results, on sensor-rate misspecification and on factored versus exact
+    joint beliefs, are reported as tentative. Every figure and number in this document is
+    reproducible from the committed repository.
   </div>
 </div>
 
@@ -163,6 +163,7 @@
       <li><div class="toc-line">Multi-Agent Overlap on a Bottleneck<span class="dots"></span></div></li>
       <li><div class="toc-line">Entropy Is Not a Correctness Metric<span class="dots"></span></div></li>
       <li><div class="toc-line">Sensor-Rate Misspecification<span class="dots"></span></div></li>
+      <li><div class="toc-line">Factored vs Exact Joint Belief<span class="dots"></span></div></li>
     </ol>
   </li>
   <li><div class="toc-line">Findings<span class="dots"></span></div></li>
@@ -175,6 +176,10 @@
 <!-- ============ 1. INTRODUCTION ============ -->
 <div class="section">
 <h2><span class="sec-num">1.</span> Introduction</h2>
+
+<p class="table-note"><b>Changelog.</b> 5 Nov 2026: Experiments 1 and 4 originally reused the
+initial belief for planning, so the agent repeated one route every round. Fixed; all affected
+results regenerated. Experiment 5 added.</p>
 
 <p>A "path-based sensor" produces a single observation for an entire traversed route rather than
 a measurement at a point. An expendable agent is sent along a path through a hazardous,
@@ -208,15 +213,14 @@ form for paths that revisit a cell (<code>src/inference.py</code>);</li>
 facility sharing one bottleneck corridor (<code>src/environment.py</code>);</li>
 <li>a metrics module scoring belief maps against planted ground truth, not only by entropy
 (<code>src/metrics.py</code>);</li>
-<li>three Monte Carlo experiments and the figures and tables in this report, all regenerated
-from the committed scripts.</li>
+<li>four Monte Carlo experiments and the figures and tables in this report, all regenerated
+from the committed scripts by <code>run_all.py</code>.</li>
 </ol>
 
 <p>Sections 2 through 5 cover the method, the environments, the code, and the experimental
-setup. Section 6 reports results, including a stress test that came back inconclusive and is
-reported as such. Section 7 collects three confirmed gaps and one open question into standalone
-findings, and the remaining sections place this work against the paper's own cited follow-ups
-and list what it does not attempt.</p>
+setup. Section 6 reports results. Section 7 collects three confirmed gaps and two tentative
+results into standalone findings, and the remaining sections place this work against the
+paper's own cited follow-ups and list what it does not attempt.</p>
 </div>
 
 <!-- ============ 2. THE METHOD ============ -->
@@ -285,9 +289,9 @@ can see which parts are the reference method and which are this project's engine
 back the same way - forces a revisit) and "loop" routes (out and back by edge-disjoint simple
 paths, when the graph offers one), and scores every candidate by exact expected information gain
 using formula (*)/(**) above.</td></tr>
-<tr><td>Shared planning trajectory</td><td>In every experiment, one canonical belief map decides
-which paths get walked and what happens on them; every compared update rule then replays that
-identical sequence of observations. This isolates each comparison to the update rule, not to
+<tr><td>Shared planning trajectory</td><td>In Experiments 1, 2 and 5, one canonical belief map,
+re-planned from its updated state every round, decides which paths get walked and what happens
+on them; every compared update rule then replays that identical sequence of observations. This isolates each comparison to the update rule, not to
 different rules exploring different parts of the map.</td></tr>
 <tr><td><code>bn_paper_literal</code></td><td>A best-effort literal reading of Remark 1: a cell
 visited <code>n</code> times contributes <code>n</code> times its single-visit destruction
@@ -380,10 +384,11 @@ forced-overlap situation Section 6.2 is about.</p>
 <h2><span class="sec-num">4.</span> Implementation</h2>
 
 <h3><span class="sec-num">4.1</span> Module Overview</h3>
-<p>Everything is a from-scratch, dependency-free Python 3 implementation - no
-numpy/scipy/matplotlib, so environment, inference and planning logic are all auditable in a few
-hundred lines each, and the figures in this report are drawn by a small built-in SVG writer
-rather than a plotting library.</p>
+<p>Everything is a from-scratch Python 3 implementation. Experiments 1-4 use only the standard
+library - no numpy/scipy/matplotlib, so environment, inference and planning logic are all
+auditable in a few hundred lines each, and the figures in this report are drawn by a small
+built-in SVG writer rather than a plotting library. Experiment 5 additionally uses numpy, to hold
+the exact joint posterior over every hazard configuration.</p>
 
 <table>
 <tr><th>File</th><th>Role</th></tr>
@@ -397,16 +402,25 @@ planner: enumerates candidate routes and scores them by exact expected entropy r
 planted ground truth.</td></tr>
 <tr><td><code>src/svgplot.py</code></td><td>Dependency-free SVG line-chart writer used for every
 chart in this report.</td></tr>
-<tr><td><code>experiment{1,2,4}_*.py</code></td><td>The three Monte Carlo experiments in
-Section 6.</td></tr>
+<tr><td><code>experiment{1,2,4}_*.py</code></td><td>Experiments 1, 2 and 4 (Sections
+6.1, 6.2, 6.4).</td></tr>
+<tr><td><code>experiment5_exact_joint.py</code></td><td>Experiment 5 (Section 6.5): factored vs
+exact joint belief under two visit models. Requires numpy.</td></tr>
+<tr><td><code>check_exp5_exact_vs_closed_form.py</code></td><td>Sanity check: after one update
+from an independent prior, the exact joint marginals must equal the closed form of Section
+2.3.</td></tr>
+<tr><td><code>run_all.py</code></td><td>Runs Experiments 1, 2, 4 and 5; writes per-trial raw
+CSVs, audits every summary mean against them, computes paired differences, runs the sanity check
+and writes a run manifest.</td></tr>
 <tr><td><code>make_diagrams.py</code>, <code>make_animation.py</code></td><td>Static and animated
 figures of both environments, colour and black-and-white variants.</td></tr>
 </table>
 
 <h3><span class="sec-num">4.2</span> Controlling for Confounds</h3>
-<p>Both Experiment 1 and Experiment 2 (Sections 6.1-6.2) hold the <i>sequence of paths taken and
+<p>Experiments 1, 2 and 5 (Sections 6.1, 6.2, 6.5) hold the <i>sequence of paths taken and
 outcomes observed</i> fixed across the methods being compared - one canonical, best-available
-belief map always drives planning decisions, and every compared update rule is then replayed
+belief map, re-planned from its updated state at the start of every round, always drives
+planning decisions, and every compared update rule is then replayed
 against that same sequence. This isolates the comparison to the quality of the belief-update
 rule itself, rather than confounding it with different methods exploring different parts of the
 map because their beliefs happened to diverge.</p>
@@ -422,10 +436,11 @@ map because their beliefs happened to diverge.</p>
 <tr><td>1 - revisit handling</td><td>Random facility</td><td>40</td><td>45</td><td>0.85</td><td>0.04</td><td>0.15</td></tr>
 <tr><td>2 - bottleneck overlap</td><td>Bottleneck facility</td><td>400</td><td>6</td><td>0.85</td><td>0.04</td><td>0.20</td></tr>
 <tr><td>4 - rate misspecification</td><td>Random facility</td><td>30 / setting</td><td>40</td><td>0.85 (true)</td><td>0.04 (true)</td><td>0.15</td></tr>
+<tr><td>5 - exact joint belief</td><td>Random facility</td><td>40 / simulator</td><td>45</td><td>0.85</td><td>0.04</td><td>0.15</td></tr>
 </table>
-<p class="table-note">Seeds are fixed in each script (<code>20260906</code>,
-<code>8675309</code>, <code>42424242</code> respectively); re-running reproduces every number in
-this report exactly.</p>
+<p class="table-note">Seeds are fixed in each script (<code>20260906</code> for Experiments 1
+and 5, <code>8675309</code> for Experiment 2, <code>42424242</code> for Experiment 4); re-running
+<code>run_all.py</code> reproduces every number in this report.</p>
 
 <h3><span class="sec-num">5.2</span> Metrics</h3>
 <p>The reference paper evaluates convergence with a single metric: total Shannon entropy of the
@@ -451,31 +466,42 @@ round (Section 4.2): <code>weighted_average</code> (the pre-existing method [18]
 to a revisiting path exactly as its own equations read, since it was never extended for
 revisits either); <code>bn_paper_literal</code> (Section 2.4's best-effort literal reading of
 Remark 1); and <code>bn_exact</code> (the corrected closed form, Section 2.3). Across the 40
-trials, agents revisited some corridor an average of 135 extra times per trial over 45 rounds -
+trials, agents revisited some corridor an average of 143 extra times per trial over 45 rounds -
 about three extra visits per round - confirming that in a corridor-network environment, the
 situation Remark 1 waves at is close to the common case, not a rare edge case.</p>
 
 <div class="table-label">Table 1. Experiment 1, round 45 of 45, averaged over 40 trials.</div>
 <table>
 <tr><th>Method</th><th>Entropy [nats]</th><th>Brier score</th><th>Log loss</th><th>Recall@k</th></tr>
-<tr><td>Weighted-average [18]</td><td>6.014</td><td>0.135</td><td>0.803</td><td>0.298</td></tr>
-<tr><td>BN, paper's literal revisit rule</td><td>6.062</td><td>0.128</td><td>0.691</td><td>0.202</td></tr>
-<tr><td>BN, corrected revisit rule (ours)</td><td>6.391</td><td>0.133</td><td>0.428</td><td>0.273</td></tr>
+<tr><td>Weighted-average [18]</td><td>4.218</td><td>0.1012</td><td>0.645</td><td>0.607</td></tr>
+<tr><td>BN, paper's literal revisit rule</td><td>3.952</td><td>0.0942</td><td>0.722</td><td>0.534</td></tr>
+<tr><td>BN, corrected revisit rule (ours)</td><td>4.112</td><td>0.0662</td><td>0.227</td><td>0.655</td></tr>
 </table>
-<p class="table-note">The literal revisit rule reaches the <i>lowest</i> entropy of the three -
-it looks the most converged - while having the <i>worst</i> log loss of the two Bayesian-network
-variants (0.691 vs. 0.428, a 62% relative gap) and worse recall@k than either alternative.</p>
+<p class="table-note">The corrected rule is the most accurate of the three on every accuracy
+metric. The literal revisit rule reaches the <i>lowest</i> entropy of the three in every round -
+it looks the most converged - while having the <i>worst</i> log loss of all three (0.722 vs.
+0.227 for the corrected rule, about 3.2&times;) and worse recall@k than either alternative.</p>
+
+<div class="table-label">Table 1a. Experiment 1, paired over the same 40 trials, literal minus corrected.</div>
+<table>
+<tr><th>Metric</th><th>Difference</th><th>SE</th></tr>
+<tr><td>Brier score</td><td>+0.028</td><td>0.0085</td></tr>
+<tr><td>Log loss</td><td>+0.50</td><td>0.13</td></tr>
+</table>
+<p class="table-note">Positive means the literal rule is worse. SE is the sample standard
+deviation of the per-trial differences divided by &radic;40.</p>
 
 <img src="../results/figures/print/experiment1_entropy_bw.svg" alt="entropy convergence, experiment 1">
 <p class="fig-caption"><b>Figure 5.</b> Belief-map entropy vs. search round. The literal revisit
-rule (dashed) converges to visibly lower entropy than the corrected rule (dotted) - it looks
+rule (dashed) has lower entropy than the corrected rule (dotted) in every round - it looks
 better converged by the paper's own metric.</p>
 
 <img src="../results/figures/print/experiment1_brier_bw.svg" alt="Brier score, experiment 1">
 <p class="fig-caption"><b>Figure 6.</b> Brier score against the same ground truth. The ranking
-inverts: the corrected rule (dotted) is the most accurate throughout, and the literal revisit
-rule (dashed) is no better than weighted-averaging (solid) despite its lower entropy in Figure
-5.</p>
+inverts: the three rules are nearly indistinguishable in the first few rounds, after which the
+corrected rule (dotted) is the most accurate (lowest in 40 of 45 rounds), with the literal
+revisit rule (dashed) between it and weighted-averaging (solid) despite its lower entropy in
+Figure 5.</p>
 
 <p>A concrete instance: in one trial, an edge with <i>no</i> planted hazard was visited twice in
 a single round trip that ended in the agent's destruction elsewhere on the same path. Starting
@@ -538,8 +564,9 @@ can always be found.</p>
 
 <h3><span class="sec-num">6.3</span> Entropy Is Not a Correctness Metric</h3>
 <p>This is not a separate experiment; it is a pattern visible in both results above. In Section
-6.1, the literal revisit rule reaches lower final entropy (6.062 vs. 6.391 nats, Table 1) than
-the corrected rule while having 62% worse log loss - by the paper's own metric the literal rule
+6.1, the literal revisit rule reaches lower final entropy (3.952 vs. 4.112 nats, Table 1) than
+the corrected rule while having about 3.2&times; worse log loss and a worse Brier score - by the
+paper's own metric the literal rule
 looks better converged; by any proper scoring rule against the actual planted hazards, it is the
 worse one. In Section 6.2, naive union's higher final entropy (0.290 vs. 0.259, Table 3)
 happens to agree with its worse Brier score, because that case really is throwing away
@@ -557,37 +584,106 @@ least somewhat wrong, often in the optimistic direction. Holding the true simula
 (0.85) and false-positive rate (0.04) fixed, the rate handed to <i>both</i> the planner and the
 belief update was swept away from the truth: a false-positive shrink sweep (assumed rate at
 100%, 50%, 25%, 10% and 2% of the true value) and a lethality bias sweep (assumed value biased
-&minus;35% to +35% relative to the truth), 30 trials per setting, 40 rounds per trial.</p>
+&minus;35% to +35% relative to the truth), 30 trials per setting, 40 rounds per trial, with the
+planner re-planning from the Bayesian-network belief every round. Assumed rates are clipped to
+[0.001, 0.999], so the +20% and +35% lethality levels both clip to 0.999: they are effectively
+one setting, run with two seed sets.</p>
 
 <div class="table-label">Table 4. Experiment 4, false-positive shrink sweep, 30 trials/setting.</div>
 <table>
-<tr><th>Assumed false positive</th><th>WA Brier</th><th>BN Brier</th><th>WA log loss</th><th>BN log loss</th></tr>
-<tr><td>100% of true (correct)</td><td>0.147</td><td>0.139</td><td>0.831</td><td>0.440</td></tr>
-<tr><td>50%</td><td>0.157</td><td>0.147</td><td>0.817</td><td>0.465</td></tr>
-<tr><td>25%</td><td>0.137</td><td>0.135</td><td>0.687</td><td>0.431</td></tr>
-<tr><td>10%</td><td>0.157</td><td>0.150</td><td>0.976</td><td>0.460</td></tr>
-<tr><td>2%</td><td>0.147</td><td>0.136</td><td>0.815</td><td>0.425</td></tr>
+<tr><th>Assumed false positive</th><th>WA Brier</th><th>BN Brier</th><th>WA log loss</th><th>BN log loss</th><th>Brier, WA &minus; BN (SE)</th></tr>
+<tr><td>100% of true (correct)</td><td>0.1006</td><td>0.0740</td><td>0.451</td><td>0.247</td><td>+0.0267 (0.0064)</td></tr>
+<tr><td>50%</td><td>0.0985</td><td>0.0761</td><td>0.438</td><td>0.247</td><td>+0.0224 (0.0076)</td></tr>
+<tr><td>25%</td><td>0.1099</td><td>0.0834</td><td>0.576</td><td>0.266</td><td>+0.0265 (0.0077)</td></tr>
+<tr><td>10%</td><td>0.1214</td><td>0.0894</td><td>0.764</td><td>0.318</td><td>+0.0319 (0.0083)</td></tr>
+<tr><td>2%</td><td>0.1174</td><td>0.0793</td><td>0.575</td><td>0.271</td><td>+0.0382 (0.0083)</td></tr>
 </table>
-<p class="table-note">The lethality bias sweep (not tabulated) shows the same pattern: BN log
-loss stays in 0.39-0.51 across all seven levels tested, weighted-average ranges 0.59-0.98.
-Brier-score differences between the two methods are small (at most 0.011) and mostly within one
-run-to-run standard deviation at this sample size (&asymp;0.04-0.08, n=30).</p>
+
+<div class="table-label">Table 5. Experiment 4, lethality bias sweep, 30 trials/setting.</div>
+<table>
+<tr><th>Lethality bias (assumed)</th><th>WA Brier</th><th>BN Brier</th><th>WA log loss</th><th>BN log loss</th><th>Brier, WA &minus; BN (SE)</th></tr>
+<tr><td>&minus;35% (0.553)</td><td>0.1384</td><td>0.0959</td><td>0.582</td><td>0.299</td><td>+0.0424 (0.0086)</td></tr>
+<tr><td>&minus;20% (0.680)</td><td>0.1113</td><td>0.0789</td><td>0.597</td><td>0.260</td><td>+0.0325 (0.0078)</td></tr>
+<tr><td>&minus;10% (0.765)</td><td>0.1067</td><td>0.0732</td><td>0.542</td><td>0.241</td><td>+0.0335 (0.0074)</td></tr>
+<tr><td>0% (0.850, correct)</td><td>0.0887</td><td>0.0653</td><td>0.450</td><td>0.221</td><td>+0.0234 (0.0058)</td></tr>
+<tr><td>+10% (0.935)</td><td>0.0748</td><td>0.0570</td><td>0.417</td><td>0.211</td><td>+0.0178 (0.0056)</td></tr>
+<tr><td>+20% (clipped to 0.999)</td><td>0.0753</td><td>0.0763</td><td>0.273</td><td>0.284</td><td>&minus;0.0010 (0.0019)</td></tr>
+<tr><td>+35% (clipped to 0.999)</td><td>0.0763</td><td>0.0759</td><td>0.376</td><td>0.347</td><td>+0.0004 (0.0033)</td></tr>
+</table>
+<p class="table-note">WA = weighted average, BN = Bayesian network (corrected rule). The last
+column is paired over trials; positive means weighted averaging is worse. The two correctly
+specified rows use different seeds, which is why they differ: run-to-run Brier standard
+deviation is 0.04-0.11 per setting.</p>
 
 <img src="../results/figures/print/experiment4_fp_sweep_bw.svg" alt="false positive misspecification sweep, experiment 4">
-<p class="fig-caption"><b>Figure 8.</b> Final Brier score vs. assumed false-positive rate. Both
-methods move within a narrow band with no consistent monotonic trend at this sample size.</p>
+<p class="fig-caption"><b>Figure 8.</b> Final Brier score vs. assumed false-positive rate. The
+Bayesian-network method (dashed) stays below weighted averaging (solid) at every level
+tested.</p>
 
-<p>This stress test set out to find a differential robustness failure - a setting where the
-Bayesian-network method's reported noise resilience breaks down once the assumed rate, not just
-the noise itself, is wrong. It did not find one at this sample size: if anything, the
-Bayesian-network method's log-loss advantage over weighted-averaging persisted across every
-tested level. Two caveats limit how much weight this negative result can bear: the assumed rate
-affects both the planner's chosen routes and the belief update at once, so a confound between
-different exploration behaviour and different inference quality is not ruled out here the way it
-was in Sections 6.1-6.2; and n=30 trials per setting is enough to see the log-loss pattern
-clearly but not enough to rule out a smaller Brier-score effect. This is reported rather than
-omitted: an inconclusive, honestly run stress test the published literature has not attempted is
-still evidence, and the question remains open for a larger-scale follow-up.</p>
+<p>The Bayesian-network method beats weighted averaging on both Brier score and log loss at
+every false-positive level tested, and across lethality bias from &minus;35% to +10%. When
+lethality is overestimated by 20% or more (the clipped 0.999 setting), the advantage disappears:
+Brier is about 0.076 for both. The original version of this experiment was reported as
+inconclusive; that result came from the planning bug noted in the changelog, which made the
+agent repeat one route every round. The corrected result is still tentative: standard deviations
+are large, n=30 per setting, the overestimated end is really one clipped setting, and the assumed
+rate affects both the planner's routes and the belief update at once, so exploration and
+inference effects are not separated here the way they are in Sections 6.1, 6.2 and 6.5.</p>
+
+<h3><span class="sec-num">6.5</span> Factored vs Exact Joint Belief</h3>
+<p>Both the reference paper and this project keep one independent hazard probability per
+corridor (a <i>factored</i> belief). After a "destroyed" observation the corridors on that path
+become correlated, and storing only per-corridor marginals discards that correlation.
+Separately, the closed form of Section 2.3 assumes every pass over a corridor is an independent
+survival trial. Experiment 5 crosses two simulators with four update rules (factored or exact
+joint, each assuming either visit model):</p>
+<ul>
+<li><b>Independent-visit:</b> every pass over a corridor is a separate survival trial.</li>
+<li><b>Once-per-round:</b> each hazardous corridor gets one destruction draw per round, at the
+first pass; later passes in the same round add no risk; draws are independent across rounds.
+(<code>experiment5_exact_joint.py</code> calls this model <code>persistent</code>.)</li>
+</ul>
+<p>Setup matches Experiment 1: the same random facilities and seeds, prior 0.15, lethality 0.85,
+false-positive rate 0.04, 40 trials and 45 rounds; graphs have 15-19 corridors. The exact joint
+rule keeps the full posterior over all 2<sup>E</sup> hazard configurations (at most 524,288
+entries) and updates it with the exact path likelihood. Paths are always chosen by the factored
+independent-visit belief, re-planned each round, so every rule sees the same paths and outcomes.
+As a sanity check, the exact joint marginals after one update from an independent prior must
+equal the closed form of Section 2.3 for both visit models; over 4,000 random cases
+(<code>check_exp5_exact_vs_closed_form.py</code>) the largest difference is 7.7e-15
+(independent-visit) and 8.3e-15 (once-per-round).</p>
+
+<div class="table-label">Table 6. Experiment 5, final round, mean of 40 trials.</div>
+<table>
+<tr><th>Simulator</th><th>Rule</th><th>Brier</th><th>Log loss</th><th>Recall@k</th></tr>
+<tr><td>independent</td><td>factored, independent-visit</td><td>0.0662</td><td>0.227</td><td>0.655</td></tr>
+<tr><td>independent</td><td>factored, once-per-round</td><td>0.0819</td><td>0.273</td><td>0.640</td></tr>
+<tr><td>independent</td><td>exact joint, independent-visit</td><td>0.0641</td><td>0.222</td><td>not reported (tie-sensitive)</td></tr>
+<tr><td>independent</td><td>exact joint, once-per-round</td><td>0.0744</td><td>0.251</td><td>not reported (tie-sensitive)</td></tr>
+<tr><td>once-per-round</td><td>factored, independent-visit</td><td>0.0744</td><td>0.342</td><td>0.660</td></tr>
+<tr><td>once-per-round</td><td>factored, once-per-round</td><td>0.0751</td><td>0.292</td><td>0.647</td></tr>
+<tr><td>once-per-round</td><td>exact joint, independent-visit</td><td>0.0720</td><td>0.293</td><td>not reported (tie-sensitive)</td></tr>
+<tr><td>once-per-round</td><td>exact joint, once-per-round</td><td>0.0644</td><td>0.223</td><td>not reported (tie-sensitive)</td></tr>
+</table>
+<p class="table-note">Recall@k is not reported for the exact joint rows because their beliefs
+near the top-k cutoff differ by less than 1e-9, so floating-point rounding decides the ranking
+and the value changes between numerical builds.</p>
+
+<div class="table-label">Table 7. Experiment 5, paired differences over trials (first minus second; positive = first is worse).</div>
+<table>
+<tr><th>Simulator</th><th>Comparison</th><th>Brier (SE)</th><th>Log loss (SE)</th></tr>
+<tr><td>independent</td><td>factored minus exact (matching model)</td><td>+0.0021 (0.0012)</td><td>+0.005 (0.003)</td></tr>
+<tr><td>independent</td><td>wrong visit model minus right (factored)</td><td>+0.0157 (0.0041)</td><td>+0.046 (0.012)</td></tr>
+<tr><td>once-per-round</td><td>factored minus exact (matching model)</td><td>+0.0106 (0.0041)</td><td>+0.070 (0.031)</td></tr>
+<tr><td>once-per-round</td><td>wrong visit model minus right (factored)</td><td>&minus;0.0007 (0.0028)</td><td>+0.050 (0.033)</td></tr>
+</table>
+
+<div class="table-label">Table 8. How often the planner would pick a different route given exact joint instead of factored marginals (matching visit model).</div>
+<table>
+<tr><th>Simulator</th><th>Different route</th><th>Mean max marginal gap</th></tr>
+<tr><td>independent</td><td>22% of rounds</td><td>0.077</td></tr>
+<tr><td>once-per-round</td><td>36% of rounds</td><td>0.157</td></tr>
+</table>
 </div>
 
 <!-- ============ 7. FINDINGS ============ -->
@@ -596,8 +692,8 @@ still evidence, and the question remains open for a larger-scale follow-up.</p>
 
 <p>Three properties of the reference method are worth stating on their own, because they are not
 obvious from the paper or from its own reported experiments and only appear once the method is
-measured on an environment its own evaluation never used. A fourth is reported as an open
-question rather than a confirmed gap.</p>
+measured on an environment its own evaluation never used. Two further results are reported as
+tentative.</p>
 
 <div class="finding">
 <div class="finding-title">Finding 1 &mdash; the revisit rule is under-specified, and the natural reading of it is wrong</div>
@@ -605,8 +701,9 @@ question rather than a confirmed gap.</p>
 revisited cell's likelihood is found by "summing the probability of each instance," without
 giving the resulting formula. Taking that literally and comparing it against the exact closed
 form derived in Section 2.3, on a floor plan that forces an average of three extra revisits per
-round, the literal rule reaches 62% worse log loss against ground truth after 45 rounds, while
-reaching <i>lower</i> entropy - it looks more converged while being less correct.</p>
+round, the literal rule ends 45 rounds with about 3.2&times; worse log loss against ground truth
+(0.722 vs. 0.227) and a worse Brier score (0.0942 vs. 0.0662), while reaching <i>lower</i>
+entropy - it looks more converged while being less correct.</p>
 <p style="margin-bottom:0;"><b>Why it matters.</b> The paper's formal problem statement requires
 round trips ("agents start and end their search rounds at their designated base stations"),
 which is exactly the condition that forces revisits whenever the environment is not fully
@@ -649,18 +746,41 @@ the paper's own reported figures.</p>
 </div>
 
 <div class="finding">
-<div class="finding-title">Finding 4 &mdash; rate misspecification: an open question, not a confirmed gap</div>
-<p style="margin-bottom:6px;"><b>Observation.</b> Feeding the belief update a false-positive or
-lethality assumption that does not match the true simulated rate did not produce a clear,
-sample-robust degradation gap between the Bayesian-network method and weighted-averaging at
-n=30 trials per setting; the Bayesian-network method's log-loss advantage in fact persisted
-across every level tested.</p>
+<div class="finding-title">Finding 4 &mdash; rate misspecification: a tentative, specific result</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> Feeding the planner and belief update a
+false-positive or lethality assumption that does not match the true simulated rate, the
+Bayesian-network method beats weighted averaging on Brier score and log loss at every
+false-positive level tested (for example, Brier 0.074 vs. 0.101 and log loss 0.247 vs. 0.451 when
+correctly specified) and across lethality bias from &minus;35% to +10%. When lethality is
+overestimated by 20% or more, the advantage disappears: Brier is about 0.076 for both. The +20%
+and +35% levels both clip the assumed lethality to 0.999, so they are effectively one setting run
+with two seed sets.</p>
 <p style="margin-bottom:0;"><b>Why it matters.</b> The reference paper never tests this axis -
-its inference procedure always knows its own noise level exactly, because the same numbers
-generate the world and update the belief. This report's stress test is a harder, more realistic
-test than the paper's own, and it is reported as an honest negative result: it does not confirm
-the paper's resilience claim extends to this regime, but it also failed to falsify it, and a
-larger-scale follow-up is needed before either conclusion is warranted.</p>
+its inference procedure always knows its own noise level exactly. This result suggests its
+resilience claim extends to misestimated rates, except a near-certain assumed lethality. It is
+tentative: standard deviations are large, n=30 per setting, and exploration and inference
+effects are not separated, so it needs a larger run before it is relied on.</p>
+</div>
+
+<div class="finding">
+<div class="finding-title">Finding 5 &mdash; factored vs exact joint belief, and the visit model</div>
+<p style="margin-bottom:6px;"><b>Observation.</b> With independent hazards, keeping a factored
+per-corridor belief instead of the exact joint posterior costs little accuracy (Brier +0.0021,
+SE 0.0012; not clearly significant at n = 40), yet the planner would pick a different route in
+22% of rounds; assuming the wrong visit model costs more (Brier +0.0157, SE 0.0041). With
+once-per-round hazards, the factoring cost roughly quintuples (Brier +0.0106, SE 0.0041) and the
+planner's route differs in 36% of rounds, while choosing the right visit model inside a factored
+belief barely helps Brier (&minus;0.0007, SE 0.0028). Recall@k is not reported for the exact
+joint rules: their beliefs near the top-k cutoff differ by less than 1e-9, so rounding decides
+the ranking.</p>
+<p style="margin-bottom:0;"><b>Tentative reading.</b> When hazards are independent, decisions
+are sensitive while outcomes are not, which suggests the information-gain objective is flat
+across good candidate paths, and the visit model matters more than factoring. When hazards act
+once per round, the loss of correlations, not the visit assumption, is the larger error.
+<b>Limits:</b> small graphs, one seed family, and n = 40 per cell; the planner always uses the
+factored independent-visit belief; once-per-round is one of several possible alternatives to
+independent visits; and the planner's information-gain formula itself assumes a factored belief,
+even when it is handed exact marginals.</p>
 </div>
 </div>
 
@@ -702,8 +822,9 @@ to expose gaps that a continuous, cycle-rich search space cannot.</p>
 implicit.</p>
 
 <ul>
-<li><b>Scale.</b> All experiments use small graphs (10-24 edges) so that exact Bayesian
-inference and exhaustive-enough path enumeration stay tractable in pure Python. The mechanism
+<li><b>Scale.</b> All experiments use small graphs (10-19 corridors) so that exact Bayesian
+inference and exhaustive-enough path enumeration stay tractable; Experiment 5's exact joint
+posterior grows as 2<sup>E</sup> and would not scale to much larger graphs. The mechanism
 behind each finding is scale-independent, but reported effect sizes should be expected to shift
 on larger, differently shaped networks.</li>
 <li><b>Planner, not the paper's planner.</b> Path selection here uses a greedy
@@ -716,33 +837,41 @@ its published equations read, which is a defensible "what a practitioner would d
 of uniqueness.</li>
 <li><b>Single seed lineage per experiment.</b> Results are reproducible but drawn from one fixed
 seed family each (Section 5.1); a wider seed sweep would tighten the confidence bounds,
-particularly for Finding 4.</li>
-<li><b>Finding 4 is explicitly inconclusive</b> and should not be read as confirming or
-refuting the paper's noise-resilience claim beyond the specific settings tested.</li>
+particularly for Findings 4 and 5.</li>
+<li><b>Findings 4 and 5 are tentative.</b> Finding 4 rests on n=30 per setting with large
+standard deviations, and its overestimated-lethality end is a single clipped setting; Finding 5
+rests on n=40 per cell and one choice of alternative visit model.</li>
 </ul>
 
 <p>Two extensions would sharpen this work further: a distributed reconciliation protocol for
 Algorithm 3 that detects a shared edge before the union step and fuses it correctly rather than
 requiring a centralised planning belief (used here only to keep the comparison controlled), and
-a misspecification sweep large enough in trial count to bound the Brier-score effect Section 6.4
-could not resolve.</p>
+a misspecification sweep large enough in trial count, and with more settings above the true
+lethality, to confirm Section 6.4's tentative result.</p>
 </div>
 
 <!-- ============ 10. REPRODUCIBILITY ============ -->
 <div class="section">
 <h2><span class="sec-num">10.</span> Reproducibility</h2>
 <p>Every number and figure in this report comes from the committed repository, at the seeds
-named in Table 1 of Section 5.1.</p>
+named in Section 5.1. <code>python run_all.py</code> runs Experiments 1, 2, 4 and 5 in sequence,
+writes per-trial results to <code>results/raw/</code>, checks every summary mean against them,
+writes the paired differences quoted here to <code>results/paired_differences.json</code>, runs
+the Experiment 5 sanity check, and records the git commit, Python and numpy versions, seeds,
+settings and every output file (with SHA-256) in <code>results/run_manifest.json</code>.</p>
 <ul>
-<li><b>Tables 1-2, Figures 5-6</b>: <code>python experiment1_revisits.py</code>.</li>
-<li><b>Table 3, Figure 7</b>: <code>python experiment2_bottleneck.py</code>.</li>
-<li><b>Table 4, Figure 8</b>: <code>python experiment4_misspecification.py</code>.</li>
+<li><b>Tables 1, 1a, 2, Figures 5-6</b>: <code>experiment1_revisits.py</code>.</li>
+<li><b>Table 3, Figure 7</b>: <code>experiment2_bottleneck.py</code>.</li>
+<li><b>Tables 4-5, Figure 8</b>: <code>experiment4_misspecification.py</code>.</li>
+<li><b>Tables 6-8</b>: <code>experiment5_exact_joint.py</code>; sanity check:
+<code>check_exp5_exact_vs_closed_form.py</code>.</li>
 <li><b>Figures 1-2</b>: <code>python make_diagrams.py</code>.</li>
 <li><b>Figures 3-4</b> (and the animated HTML versions): <code>python make_animation.py</code>.</li>
-<li>All black-and-white print figures: <code>python make_print_figures.py</code>, run after the
-three experiment scripts above.</li>
+<li>All black-and-white print figures: <code>python make_print_figures.py</code>, run after
+<code>run_all.py</code>.</li>
 </ul>
-<p>No third-party dependencies are required; everything uses the Python 3 standard library. The
+<p>Experiments 1, 2 and 4 use only the Python 3 standard library; Experiment 5 also needs numpy.
+The
 report itself is <code>report/echo_corridors_report.html</code>; the PDF alongside it is that
 file printed to Letter paper.</p>
 

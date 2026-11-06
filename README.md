@@ -28,11 +28,24 @@ documented in the report
 
 A third observation runs through both: the paper's sole convergence
 metric (Shannon entropy) measures how *confident* a belief map is, not
-whether it is *correct*, and both gaps above are invisible to it. A fourth,
-honestly-reported stress test (sensor-reliability misspecification) did
-not find the effect it went looking for -- included anyway, because a
-clean negative result run at this scale is still worth having on the
-record.
+whether it is *correct*, and both gaps above are invisible to it.
+
+Two further results are reported as tentative:
+
+4. Under sensor-reliability misspecification, the Bayesian-network method
+   keeps its accuracy advantage over the weighted-average baseline at every
+   false-positive misestimate tested and across lethality bias from -35% to
+   +10%; the advantage disappears only when lethality is assumed
+   near-certain.
+5. Keeping one independent probability per corridor (a factored belief)
+   instead of the exact joint posterior costs little accuracy when hazards
+   act on every pass, about five times more when a corridor's hazard acts
+   once per round, and in both cases changes the planner's route choice in
+   a fifth to a third of rounds.
+
+**Changelog.** 5 Nov 2026: Experiments 1 and 4 originally reused the
+initial belief for planning, so the agent repeated one route every round.
+Fixed; all affected results regenerated. Experiment 5 added.
 
 ## What it looks like
 
@@ -66,11 +79,16 @@ src/
 experiment1_revisits.py          Finding 1: revisit handling
 experiment2_bottleneck.py        Finding 2: multi-agent overlap on a bridge
 experiment4_misspecification.py  Finding 4: sensor-rate misspecification
+experiment5_exact_joint.py       Finding 5: factored vs exact joint belief (needs numpy)
+check_exp5_exact_vs_closed_form.py  sanity check for Experiment 5
+run_all.py                       runs Experiments 1, 2, 4, 5; raw CSVs, audit, manifest
 make_diagrams.py                  static environment topology figures
 make_animation.py                 animated round-trip replays (SVG, not GIF -- see report)
 make_print_figures.py             black-and-white figure set for the print report
 
 results/               generated CSV/JSON summaries + SVG figures
+results/raw/           per-trial raw results (one row per trial and method)
+results/run_manifest.json  commit, versions, seeds, settings, output hashes
 report/echo_corridors_report.html   the report (open in a browser)
 report/echo_corridors_report.pdf    the same report, printed to Letter paper
 report/REPORT.md                    longer, informally written companion version
@@ -78,21 +96,25 @@ report/REPORT.md                    longer, informally written companion version
 
 ## Running it
 
-Requires only Python 3.9+ and the standard library -- no `pip install`
-needed.
+Experiments 1, 2 and 4 need only Python 3.9+ and the standard library.
+Experiment 5 (and therefore `run_all.py`) also needs numpy
+(`pip install numpy`).
 
 ```bash
-python experiment1_revisits.py
-python experiment2_bottleneck.py
-python experiment4_misspecification.py
+python run_all.py               # Experiments 1, 2, 4, 5 + raw CSVs, audit, manifest
+python make_print_figures.py    # black-and-white figures for the print report
 python make_diagrams.py
 python make_animation.py
-python make_print_figures.py    # after the three experiment scripts above
 ```
 
-Each script writes its own CSV/JSON summaries and SVG figures into
-`results/`. Random seeds are fixed in each script, so re-running reproduces
-the numbers in the report exactly.
+Each experiment script can also be run on its own and writes its own
+CSV/JSON summaries and SVG figures into `results/`. `run_all.py` also
+writes per-trial results to `results/raw/`, checks every summary mean
+against them, writes the paired differences quoted in the report to
+`results/paired_differences.json`, runs the Experiment 5 sanity check, and
+records the git commit, Python and numpy versions, seeds, settings and
+every output file in `results/run_manifest.json`. Random seeds are fixed in
+each script, so re-running reproduces the numbers in the report.
 
 ## Method being implemented
 

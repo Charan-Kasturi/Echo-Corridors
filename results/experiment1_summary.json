@@ -4,26 +4,26 @@
   "p_haz": 0.15,
   "lethality": 0.85,
   "false_positive": 0.04,
-  "total_revisit_edge_visits_across_all_trials": 5400,
-  "avg_revisit_edge_visits_per_trial": 135.0,
+  "total_revisit_edge_visits_across_all_trials": 5708,
+  "avg_revisit_edge_visits_per_trial": 142.7,
   "final_round_metrics": {
     "weighted_average": {
-      "entropy_mean": 6.013731369543457,
-      "brier_mean": 0.13504396332348934,
-      "logloss_mean": 0.8030822230243715,
-      "recall_at_k_mean": 0.29779761904761903
+      "entropy_mean": 4.218382903873003,
+      "brier_mean": 0.10117914090962017,
+      "logloss_mean": 0.6452583257024117,
+      "recall_at_k_mean": 0.6070238095238095
     },
     "bn_paper_literal": {
-      "entropy_mean": 6.062098518251702,
-      "brier_mean": 0.12809155965000804,
-      "logloss_mean": 0.6913741295958161,
-      "recall_at_k_mean": 0.2019642857142857
+      "entropy_mean": 3.952003031250879,
+      "brier_mean": 0.09421851270675025,
+      "logloss_mean": 0.722218582927387,
+      "recall_at_k_mean": 0.5341071428571429
     },
     "bn_exact": {
-      "entropy_mean": 6.391190024091939,
-      "brier_mean": 0.13279666661598108,
-      "logloss_mean": 0.4281903404114943,
-      "recall_at_k_mean": 0.27279761904761907
+      "entropy_mean": 4.111599342249831,
+      "brier_mean": 0.06622398571650799,
+      "logloss_mean": 0.22700046740075677,
+      "recall_at_k_mean": 0.6549404761904762
     }
   },
   "worked_examples": [
