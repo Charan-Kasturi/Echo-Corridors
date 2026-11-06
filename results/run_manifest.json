@@ -1,0 +1,211 @@
+{
+  "date": "2026-11-05T20:30:02-05:00",
+  "git_commit": "f867ee98dc71c2835a678ca33168388aca7acd03",
+  "git_branch": "fix-replanning",
+  "git_worktree_dirty": false,
+  "git_dirty_paths_excluding_results": [],
+  "python_version": "3.12.10 (tags/v3.12.10:0cc8128, Apr  8 2025, 12:21:36) [MSC v.1943 64 bit (AMD64)]",
+  "python_executable": "C:\\Users\\chara\\AppData\\Local\\Microsoft\\WindowsApps\\PythonSoftwareFoundation.Python.3.12_qbz5n2kfra8p0\\python.exe",
+  "numpy_version": "1.26.4",
+  "platform": "Windows-11-10.0.26300-SP0",
+  "command": "python run_all.py",
+  "runtime_seconds": {
+    "experiment1_revisits": 0.54,
+    "experiment2_bottleneck": 0.75,
+    "experiment4_misspecification": 2.7,
+    "experiment5_exact_joint": 24.43
+  },
+  "experiments": {
+    "experiment1_revisits": {
+      "script": "experiment1_revisits.py",
+      "seeds": "SEED0 + trial, trial = 0..39",
+      "SEED0": 20260906,
+      "TRIALS": 40,
+      "ROUNDS": 45,
+      "P_HAZ": 0.15,
+      "LETHALITY": 0.85,
+      "FALSE_POSITIVE": 0.04,
+      "MAX_OUT_LEN": 4,
+      "METHODS": [
+        "weighted_average",
+        "bn_paper_literal",
+        "bn_exact"
+      ],
+      "graph": "generate_random_facility(rows=4, cols=4, prune_prob=0.35, min_dead_ends=2)",
+      "planner_max_candidates": 250
+    },
+    "experiment2_bottleneck": {
+      "script": "experiment2_bottleneck.py",
+      "seeds": "SEED0 + trial, trial = 0..399",
+      "SEED0": 8675309,
+      "TRIALS": 400,
+      "ROUNDS": 6,
+      "P_HAZ": 0.2,
+      "LETHALITY": 0.85,
+      "FALSE_POSITIVE": 0.04,
+      "MAX_OUT_LEN": 5,
+      "graph": "generate_bottleneck_facility()",
+      "planner_max_candidates": 250
+    },
+    "experiment4_misspecification": {
+      "script": "experiment4_misspecification.py",
+      "seeds": "SEED0 + sweep_offset + level_index*1000 + trial; sweep_offset = 0 (fp_shrink) or 500000 (lethality_bias)",
+      "SEED0": 42424242,
+      "TRIALS": 30,
+      "ROUNDS": 40,
+      "P_HAZ": 0.15,
+      "TRUE_LETHALITY": 0.85,
+      "TRUE_FALSE_POSITIVE": 0.04,
+      "MAX_OUT_LEN": 4,
+      "METHODS": [
+        "weighted_average",
+        "bn_exact"
+      ],
+      "FP_SHRINK_LEVELS": [
+        1.0,
+        0.5,
+        0.25,
+        0.1,
+        0.02
+      ],
+      "L_BIAS_LEVELS": [
+        -0.35,
+        -0.2,
+        -0.1,
+        0.0,
+        0.1,
+        0.2,
+        0.35
+      ],
+      "graph": "generate_random_facility(rows=4, cols=4, prune_prob=0.35, min_dead_ends=2)",
+      "planner_max_candidates": 200
+    },
+    "experiment5_exact_joint": {
+      "script": "experiment5_exact_joint.py",
+      "seeds": "SEED0 + trial, trial = 0..39, same seeds for each simulator",
+      "SEED0": 20260906,
+      "TRIALS": 40,
+      "ROUNDS": 45,
+      "P_HAZ": 0.15,
+      "LETHALITY": 0.85,
+      "FALSE_POSITIVE": 0.04,
+      "MAX_OUT_LEN": 4,
+      "SIMULATORS": [
+        "independent",
+        "persistent"
+      ],
+      "RULES": [
+        "factored_indep",
+        "factored_persist",
+        "joint_indep",
+        "joint_persist"
+      ],
+      "simulator_names": {
+        "persistent": "once-per-round in the report"
+      },
+      "graph": "generate_random_facility(rows=4, cols=4, prune_prob=0.35, min_dead_ends=2)",
+      "planner_max_candidates": 250
+    },
+    "check_exp5_exact_vs_closed_form": {
+      "script": "check_exp5_exact_vs_closed_form.py",
+      "seed": 5112026,
+      "cases": {
+        "independent": 2000,
+        "persistent": 2000
+      },
+      "tolerance": 1e-12,
+      "max_abs_difference": {
+        "independent": 7.66053886991358e-15,
+        "persistent": 8.326672684688674e-15
+      },
+      "passed": true
+    }
+  },
+  "audit": {
+    "checks": 130,
+    "tolerance": 1e-12,
+    "mismatches": []
+  },
+  "outputs": [
+    {
+      "path": "results/experiment1_summary.csv",
+      "sha256": "366b28de19f3e61007cce0f8dffe4d2af0694f0a745223c21e20ded6f10cd729"
+    },
+    {
+      "path": "results/experiment1_summary.json",
+      "sha256": "dbefa4fa53b71176c28d549843b9fe1bc389653556f0645cb23261a726b4d17d"
+    },
+    {
+      "path": "results/experiment2_summary.csv",
+      "sha256": "b0fab311cbcba0c531ab2bd8a4937b7ba86cbed2931da12ffd34b6b696116302"
+    },
+    {
+      "path": "results/experiment2_summary.json",
+      "sha256": "b92719194c9d18a7b6231d7a2163bcc66801c325d46cd02b95bd903676f27582"
+    },
+    {
+      "path": "results/experiment4_fp_sweep.csv",
+      "sha256": "1e635d1298d96b289ef84dfe1bc521425bafa1331d4d934750ac8ba79f2edf18"
+    },
+    {
+      "path": "results/experiment4_lethality_sweep.csv",
+      "sha256": "e0f09b4893223ab5354d21c883a97f80865267a7a45b84d47cf0e1d8373cdb69"
+    },
+    {
+      "path": "results/experiment4_summary.json",
+      "sha256": "10017198052820e6c092dbee1bf60750ee767608595a11e6b2cab21eb9e714a7"
+    },
+    {
+      "path": "results/experiment5_summary.json",
+      "sha256": "21321b3fbe64c6dda04501dba5929f4acbe979713e79ab8b549cc6440a0826e9"
+    },
+    {
+      "path": "results/figures/experiment1_brier.svg",
+      "sha256": "e069067f242b523aee0be5043b31dc9b6921d0cca8678308e0a107a09be93c07"
+    },
+    {
+      "path": "results/figures/experiment1_entropy.svg",
+      "sha256": "cae7228136799ef2dbf2b253c69ffa560b02f201c5dea23e378ef10b4578f06f"
+    },
+    {
+      "path": "results/figures/experiment1_recall.svg",
+      "sha256": "5936a19fbd32fe4d52112c5db88a67ac9a0f143d135961ae529a1c422d9d0557"
+    },
+    {
+      "path": "results/figures/experiment2_bridge_brier.svg",
+      "sha256": "6d422c428e3c7311c2b0480b095a59bc91d8ec243f4b4d3908f76b697690d69e"
+    },
+    {
+      "path": "results/figures/experiment2_map_brier.svg",
+      "sha256": "742425a4f49efa3d8a26fe09b9e688b07487d60c2559da2b6da9c8862655bf65"
+    },
+    {
+      "path": "results/figures/experiment4_fp_sweep.svg",
+      "sha256": "d43eb538428ef078df5220358be686c37096cb15b7b32378d88163c3a51f5755"
+    },
+    {
+      "path": "results/figures/experiment4_lethality_sweep.svg",
+      "sha256": "2542547e53885ec63c475fe3cf96864fa241efd0f3ab8a9e3ecd5f40e0f229c8"
+    },
+    {
+      "path": "results/paired_differences.json",
+      "sha256": "a27df087a58f4618288dc37ff2b59ab9f96a8361c230ee5fab5d96a634ffa0de"
+    },
+    {
+      "path": "results/raw/experiment1_trials.csv",
+      "sha256": "071a441dd17d8445331a9b273ea28ec8ced1c499769ae4cf83dd7658080b6fb2"
+    },
+    {
+      "path": "results/raw/experiment2_trials.csv",
+      "sha256": "2c4427da329b43aed2938eb5dd44366c2c3edac16abca748bafa6f5b648188a0"
+    },
+    {
+      "path": "results/raw/experiment4_trials.csv",
+      "sha256": "15b069f3a95335b16c3656ae1ce988e050858457976f3865104647dc1ba14671"
+    },
+    {
+      "path": "results/raw/experiment5_trials.csv",
+      "sha256": "a4fd81b87ca55c82fa139dc305a3df39656ae4550d6258efe7043e1c5ad810b6"
+    }
+  ]
+}
